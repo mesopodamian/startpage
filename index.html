@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Links</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+      <header>
+        <h1>homepage</h1>
+        <button id="menuToggle" class="menu-btn" title="Menu">☰</button>
+      </header>
+
+      <!-- Slide‑out side menu -->
+      <aside class="side-menu" id="sideMenu">
+        <div class="menu-content">
+          <button id="downloadBtn" class="add-btn">Download JSON</button>
+          <br>
+          <button id="loadBtn" class="add-btn">Load JSON</button>
+          <input type="file" id="fileInput" accept=".json" hidden />
+          <br>
+          <button id="loadBookmarksBtn" class="add-btn">Load HTML</button>
+          <input type="file" id="bookmarksFile" accept=".html" hidden />
+          <br>
+          <button id="clearBtn" class="add-btn danger-btn">Clear All Data</button>
+        </div>
+      </aside>
+      <!-- Overlay for when menu is open -->
+      <div class="overlay" id="overlay"></div>
+
+      <section class="search-bar">
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="Search..."
+          autocomplete="off"
+        />
+      </section>
+
+      <div class="section">
+        <div class="header" id="toggleBookmarksBtn">Bookmarks</div>
+        <main class="container">
+            <p style="opacity: 0.7">Load a JSON or HTML file to start.</p>
+        </main>
+      </div>
+
+    <footer>
+      <p>&copy; 2025</p>
+    </footer>
+
+    <!-- Link Modal -->
+    <div class="modal" id="linkModal">
+      <div class="modal-content">
+        <h2>Add a new link</h2>
+        <form id="linkForm">
+          <label>Title</label>
+          <input type="text" id="linkTitle" required />
+          <label>URL</label>
+          <input type="url" id="linkUrl" required />
+          <div class="modal-actions">
+            <button type="submit">Add</button>
+            <button type="button" id="cancelLinkModal">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Remove Link Modal -->
+    <div class="modal" id="removeLinkModal">
+      <div class="modal-content">
+        <h2>Remove link</h2>
+        <p id="removeLinkText">Are you sure you want to remove this link?</p>
+        <div class="modal-actions">
+          <button type="button" id="confirmRemoveLink" class="danger-btn">
+            Delete
+          </button>
+          <button type="button" id="cancelRemoveLink">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Group Modal -->
+    <div class="modal" id="groupModal">
+      <div class="modal-content">
+        <h2>Add a new group</h2>
+        <form id="groupForm">
+          <label>Group name</label>
+          <input type="text" id="groupName" required />
+          <div class="modal-actions">
+            <button type="submit">Add</button>
+            <button type="button" id="cancelGroupModal">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Group Remove Confirmation Modal -->
+    <div class="modal" id="removeGroupModal">
+      <div class="modal-content">
+        <h2>Remove group</h2>
+        <p id="removeGroupText">Are you sure you want to remove this group?</p>
+        <div class="modal-actions">
+          <button type="button" id="confirmRemoveGroup" class="danger-btn">
+            Delete
+          </button>
+          <button type="button" id="cancelRemoveGroup">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="main.js"></script>
+  </body>
+</html>

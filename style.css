@@ -1,0 +1,569 @@
+/* === Theme Variables === */
+:root {
+    /* === Core background surfaces === */
+    --color-bg: #1d1f23; /* main page background */
+    --color-card-bg: #2a2d32; /* group / card backgrounds */
+    --color-header-bg: #23262b; /* header panels */
+    --color-footer-bg: #23262b; /* footer panels */
+    --color-modal-bg: #2f3237; /* modal input backgrounds */
+    --color-sidebar-bg: #2a2d32; /* side menu */
+
+    /* === Text & border colors === */
+    --color-text-main: #e2e2e2; /* main text */
+    --color-text-muted: #b8b8b8; /* footer / dim text */
+    --color-border: rgba(255, 255, 255, 0.08); /* subtle card border */
+    --color-border-strong: #2c2c2c;
+
+    /* === Accent / interactive colors === */
+    --color-accent: #7aa2b8;
+    --color-accent-hover: #a4c1d0;
+
+    /* === Hover & neutral shades === */
+    --color-neutral-1: #33363a;
+    --color-neutral-2: #3b3e43;
+    --color-neutral-3: #3a3d42;
+    --color-neutral-4: #4a4d53;
+    --color-overlay: rgba(0, 0, 0, 0.7);
+    --color-overlay-light: rgba(0, 0, 0, 0.6);
+
+    /* === Feedback / status === */
+    --color-danger: #d9534f;
+    --color-danger-hover: #e66a64;
+    --color-danger-text: #ff6b6b;
+
+    /* === Others === */
+    --radius-small: 6px;
+    --radius: 10px;
+    --font-main: "Inter", "Segoe UI", Roboto, sans-serif;
+    --shadow-card: 0 0 10px rgba(0, 0, 0, 0.25);
+    --shadow-sidebar: -4px 0 12px rgba(0, 0, 0, 0.4);
+}
+
+/* === Reset === */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* === Sticky layout === */
+html,
+body {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    background: var(--color-bg);
+    color: var(--color-text-main);
+    font-family: var(--font-main);
+    line-height: 1.6;
+}
+
+main.container.hidden {
+    display: none;
+}
+
+main.container.hidden {
+    display: block; /* keep layout for fade */
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* === Header === */
+header {
+    background: var(--color-header-bg);
+    padding: 1.2rem 2rem;
+    border-bottom: 1px solid var(--color-border-strong);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+header h1 {
+    font-size: 1.4rem;
+    color: var(--color-accent);
+    letter-spacing: 1px;
+    margin: 0;
+}
+
+/* === Main === */
+main.container {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding: 2rem;
+    margin: 0 auto;
+    background: var(--color-card-bg);
+    border: 1px solid var(--color-border);
+    box-shadow: 0 0 var(--shadow-card) var(--shadow-card);
+    opacity: 1;
+    transition: opacity 0.25s ease;
+    border-radius: 0 0 var(--radius) var(--radius);
+}
+
+.border-radius-container {
+    border-radius: var(--radius) var(--radius) 0 0;
+}
+
+/* === Groups === */
+section.group {
+    background: var(--color-card-bg);
+    padding: 1.5rem 1.8rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-card);
+}
+
+.group-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.group-header h2 {
+    margin: 0;
+    font-size: 1.3rem;
+    color: var(--color-accent);
+    flex: 1;
+}
+/* === Group header clickable === */
+.group-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    user-select: none;
+}
+
+.group-header:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* Toggle icon (▶ ▼) */
+.toggle-icon {
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    margin-left: 0.6rem;
+}
+
+/* Nested group container */
+.nested-container {
+    margin-left: 1rem;
+    border-left: 2px solid var(--color-border);
+    padding-left: 1rem;
+    transition: all 0.2s ease-in-out;
+}
+
+/* Optional: depth-based subtle border color */
+.group[data-depth="1"] .nested-container {
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* === Remove group “×” === */
+.remove-btn.remove-x {
+    background: transparent;
+    color: var(--color-text-muted);
+    border: none;
+    font-size: 1.6rem;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0;
+    margin-left: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.6rem;
+    height: 1.6rem;
+}
+.remove-btn.remove-x:hover {
+    color: var(--color-danger-text);
+}
+
+/* Depth-based visual cue */
+.group[data-depth="1"] {
+    border-color: rgba(255, 255, 255, 0.15);
+}
+.group[data-depth="2"] {
+    opacity: 0.85;
+}
+.group[data-depth="3"] {
+    opacity: 0.75;
+}
+
+/* Toggle icon (▶ ▼ •) */
+.toggle-icon {
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    margin-left: 0.6rem;
+}
+.group-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    user-select: none;
+}
+.group-header:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.link-item mark {
+    background: var(--color-accent);
+    color: #fff;
+    border-radius: 2px;
+}
+
+/* === Add / generic buttons === */
+.add-btn {
+    background: var(--color-accent);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius);
+    padding: 0.4rem 0.8rem;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+.add-btn:hover {
+    background: var(--color-accent-hover);
+}
+
+.remove-btn {
+    background: var(--color-neutral-3);
+    color: var(--color-text-muted);
+    border: none;
+    border-radius: var(--radius);
+    padding: 0.4rem 0.8rem;
+    cursor: pointer;
+    font-size: 0.85rem;
+}
+.remove-btn:hover {
+    background: var(--color-neutral-4);
+    color: var(--color-text-main);
+}
+
+/* === Danger buttons === */
+.danger-btn {
+    background: var(--color-danger);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius);
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    font-weight: 500;
+}
+.danger-btn:hover {
+    background: var(--color-danger-hover);
+}
+
+/* === Link list === */
+.link-list {
+    margin: 15px 0px;
+}
+
+ul.link-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.link-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--color-neutral-1);
+    border-radius: var(--radius);
+    padding: 0.6rem 1rem;
+}
+.link-item:hover {
+    background: var(--color-neutral-2);
+}
+.link-item a {
+    flex: 1;
+    color: var(--color-text-main);
+    text-decoration: none;
+    font-weight: 500;
+}
+.link-item a:hover {
+    color: var(--color-accent-hover);
+}
+
+/* === Per-link delete “×” === */
+.link-remove-btn {
+    background: transparent;
+    border: none;
+    color: var(--color-text-muted);
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    width: 1.2rem;
+    height: 1.2rem;
+    padding: 0;
+}
+.link-remove-btn:hover {
+    color: var(--color-danger-text);
+}
+
+/* === Footer === */
+footer {
+    background: var(--color-footer-bg);
+    text-align: center;
+    padding: 1rem;
+    border-top: 1px solid var(--color-border);
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    margin-top: auto;
+}
+
+/* === Modals === */
+.modal {
+    position: fixed;
+    inset: 0;
+    background: var(--color-overlay);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+}
+.modal.show {
+    display: flex;
+}
+
+.modal-content {
+    background: var(--color-card-bg);
+    color: var(--color-text-main);
+    padding: 1.5rem 2rem;
+    border-radius: var(--radius);
+    width: 100%;
+    max-width: 400px;
+    border: 1px solid var(--color-border);
+}
+
+.modal-content h2 {
+    margin-bottom: 1rem;
+    color: var(--color-accent);
+}
+
+.modal-content label {
+    display: block;
+    margin-top: 0.8rem;
+    font-weight: 500;
+}
+
+.modal-content input {
+    width: 100%;
+    padding: 0.5rem;
+    margin-top: 0.3rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--color-border-strong);
+    background: var(--color-modal-bg);
+    color: var(--color-text-main);
+}
+
+.modal-actions {
+    margin-top: 1.2rem;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.6rem;
+}
+
+.modal-actions button {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+}
+.modal-actions button[type="submit"] {
+    background: var(--color-accent);
+    color: #fff;
+}
+.modal-actions button[type="submit"]:hover {
+    background: var(--color-accent-hover);
+}
+.modal-actions #cancelBtn {
+    background: var(--color-neutral-3);
+    color: var(--color-text-main);
+}
+.modal-actions #cancelBtn:hover {
+    background: var(--color-neutral-4);
+}
+
+/* === Text highlight inside modal === */
+#removeGroupText {
+    margin-top: 0.5rem;
+    color: var(--color-text-main);
+}
+
+/* === Sidebar menu === */
+.side-menu {
+    position: fixed;
+    top: 0;
+    right: -280px;
+    width: 260px;
+    height: 100%;
+    background: var(--color-sidebar-bg);
+    box-shadow: var(--shadow-sidebar);
+    padding: 2rem 1rem;
+    transition: right 0.25s ease-in-out;
+    z-index: 120;
+    border-left: 1px solid var(--color-border-strong);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.side-menu.open {
+    right: 0;
+}
+.side-menu .menu-content h2 {
+    color: var(--color-accent);
+    margin-top: 0;
+    margin-bottom: 1rem;
+}
+
+/* === Overlay behind side menu === */
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--color-overlay-light);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.25s ease-in-out;
+    z-index: 110;
+}
+.overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* === Hamburger menu button === */
+.menu-btn {
+    /* Layout */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    /* Appearance */
+    width: 2.2rem;
+    height: 2.2rem;
+    background: var(--color-card-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-small);
+    color: var(--color-accent);
+    font-size: 1.3rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.menu-btn:hover {
+    background: var(--color-accent);
+    color: #fff;
+    border-color: var(--color-accent-hover);
+    transform: scale(1.05);
+}
+
+.menu-btn:active {
+    transform: scale(0.97);
+}
+
+/* === Search bar === */
+.search-bar {
+    background: var(--color-header-bg);
+    border-bottom: 1px solid var(--color-border);
+    padding: 0.8rem 2rem;
+    display: flex;
+    justify-content: center;
+}
+
+.search-bar input {
+    width: 100%;
+    max-width: 500px;
+    padding: 0.6rem 1rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--color-border);
+    background: var(--color-card-bg);
+    color: var(--color-text-main);
+    font-size: 0.95rem;
+    outline: none;
+}
+
+.search-bar input:focus {
+    border-color: var(--color-accent);
+    background: var(--color-bg);
+}
+
+/* Nested groups indentation */
+.nested-groups {
+    margin-left: 1rem;
+    border-left: 2px solid var(--color-border);
+    padding-left: 1rem;
+}
+
+.sub-group {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.sub-group .group-header h2 {
+    font-size: 1rem;
+}
+
+.sub-group .link-item {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* === Search result highlight === */
+.link-item.highlighted {
+    background: var(--color-accent);
+}
+
+.link-item.highlighted a {
+    color: #fff;
+}
+
+.section {
+    margin: 1rem 3rem;
+    padding: 0.5rem;
+}
+
+.section .header {
+    cursor: pointer !important;
+    background-color: var(--color-header-bg);
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 1rem;
+    border: 1px solid var(--color-border);
+    background: var(--color-card-bg);
+    color: var(--color-text-main);
+}
+
+.border-radius {
+    border-radius: var(--radius);
+}
+
+@media (max-width: 768px) {
+    main.container {
+        grid-template-columns: 1fr;
+        padding: 1.5rem;
+    }
+    header h1 {
+        font-size: 1.5rem;
+    }
+    section.group {
+        padding: 1.2rem;
+    }
+}
