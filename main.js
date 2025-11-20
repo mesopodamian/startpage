@@ -40,6 +40,8 @@ let groupToDelete = null;
 let linkToDelete = { groupIndex: null, linkIndex: null };
 let renderItemActions = true;
 
+let selected = undefined;
+
 // === Toggle Menu ===
 menuToggle.addEventListener("click", () => {
     sideMenu.classList.toggle("open");
@@ -57,6 +59,51 @@ window.addEventListener("DOMContentLoaded", () => {
         searchInput.select();
     }
 });
+
+document.addEventListener("keydown", (e) => {
+    if (e.key == "ArrowUp") {
+        navigateLinks(-1);
+        e.preventDefault();
+    }
+    if (e.key == "ArrowDown") {
+        navigateLinks(1);
+        e.preventDefault();
+    }
+});
+
+function navigateLinks(direction) {
+    const links = Array.from(document.querySelectorAll(".link-item"));
+
+    if (!selected || direction === 0) {
+        // Handle the case where no element is initially highlighted
+        selected = links[0]; // Select the first link
+        selected.classList.add("highlighted");
+        return;
+    }
+
+    let currentIndex = links.indexOf(selected);
+    let nextIndex = currentIndex + direction;
+
+    // Wrap around if we reach the beginning or end of the list
+    if (nextIndex < 0) {
+        nextIndex = links.length - 1;
+    } else if (nextIndex >= links.length) {
+        nextIndex = 0;
+    }
+
+    // Remove highlighted class from the current selected element
+    selected.classList.remove("highlighted");
+
+    // Update selected and add highlighted class to the new element
+    selected = links[nextIndex];
+    selected.classList.add("highlighted");
+
+    // Optional: Scroll the selected element into view
+    selected.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+    });
+}
 
 document.addEventListener("keydown", (e) => {
     if (!searchInput.value) {
@@ -504,30 +551,15 @@ function handleSearch(query) {
             return;
         }
 
-        filtered = filterDataTree(clean, query.toLowerCase());
+        filtered = query.startsWith(".")
+            ? clean
+            : filterDataTree(clean, query.toLowerCase());
     }
 
     showBookmarks();
     renderGroups(filtered, { expandAll: true });
-    highlightFirstVisibleLink();
+    navigateLinks(0);
     renderItemActions = true;
-}
-
-// === Highlight helper for search ===
-function highlightFirstVisibleLink() {
-    // remove old highlight
-    document
-        .querySelectorAll(".link-item.highlighted")
-        .forEach((li) => li.classList.remove("highlighted"));
-
-    // find the first actually visible link
-    const firstVisible = Array.from(
-        document.querySelectorAll(".link-item"),
-    ).find((li) => li.offsetParent !== null);
-
-    if (firstVisible) {
-        firstVisible.classList.add("highlighted");
-    }
 }
 
 /* --- attach input + Enter key --- */
@@ -542,13 +574,9 @@ if (searchInput) {
             const q = searchInput.value.trim().toLowerCase();
             if (!q) return;
 
-            const firstVisible = Array.from(
-                document.querySelectorAll(".link-item a"),
-            ).find((a) => a.offsetParent !== null);
-
-            if (firstVisible) {
+            if (selected) {
                 const target = isCtrlPressed(e) ? "_blank" : "_self";
-                window.open(firstVisible.href, target);
+                window.open(selected.firstChild.href, target);
                 e.preventDefault();
             }
         }
