@@ -5,10 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Links</title>
     <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap" rel="stylesheet">
   </head>
   <body>
       <header>
-        <h1>homepage</h1>
+        <h1></h1>
         <button id="menuToggle" class="menu-btn" title="Menu">☰</button>
       </header>
 
@@ -29,17 +32,13 @@
       <!-- Overlay for when menu is open -->
       <div class="overlay" id="overlay"></div>
 
-      <section class="search-bar">
-        <input
-          type="text"
-          id="searchInput"
-          placeholder="Search..."
-          autocomplete="off"
-        />
+      <div id="clock" class="clock" onload="showTime()"></div>
+      <section class="search-bar" id="searchbar">
+        <input type="text" id="searchInput" placeholder="Search..." autocomplete="off" />
       </section>
 
       <div class="section">
-        <div class="header" id="toggleBookmarksBtn">Bookmarks</div>
+        <div class="header" id="toggleBookmarksBtn"></div>
         <main class="container">
             <p style="opacity: 0.7">Load a JSON or HTML file to start.</p>
         </main>

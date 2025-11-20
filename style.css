@@ -52,6 +52,17 @@ body {
     height: 100%;
 }
 
+/* Hide scrollbar for Chrome, Safari and Opera */
+html::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+html {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+}
+
 body {
     display: flex;
     flex-direction: column;
@@ -73,9 +84,9 @@ main.container.hidden {
 
 /* === Header === */
 header {
-    background: var(--color-header-bg);
+    /*background: var(--color-header-bg);*/
+    /*border-bottom: 1px solid var(--color-border-strong);*/
     padding: 1.2rem 2rem;
-    border-bottom: 1px solid var(--color-border-strong);
     position: sticky;
     top: 0;
     z-index: 10;
@@ -85,8 +96,8 @@ header {
 }
 
 header h1 {
-    font-size: 1.4rem;
-    color: var(--color-accent);
+    font-size: 1.2rem;
+    color: var(--color-text-muted);
     letter-spacing: 1px;
     margin: 0;
 }
@@ -469,22 +480,26 @@ ul.link-list {
 
 /* === Search bar === */
 .search-bar {
-    background: var(--color-header-bg);
-    border-bottom: 1px solid var(--color-border);
+    /*background: var(--color-header-bg);*/
+    /*border-bottom: 1px solid var(--color-border);*/
     padding: 0.8rem 2rem;
     display: flex;
     justify-content: center;
 }
 
+.search-bar-margin {
+    margin-top: calc(25% - 50px);
+}
+
 .search-bar input {
     width: 100%;
-    max-width: 500px;
-    padding: 0.6rem 1rem;
+    max-width: 700px;
+    padding: 1rem 1.4rem;
     border-radius: var(--radius);
     border: 1px solid var(--color-border);
     background: var(--color-card-bg);
-    color: var(--color-text-main);
-    font-size: 0.95rem;
+    color: var(--color-text-muted);
+    font-size: 1em;
     outline: none;
 }
 
@@ -542,6 +557,17 @@ ul.link-list {
 
 .border-radius {
     border-radius: var(--radius);
+}
+
+.clock {
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    color: var(--color-accent);
+    font-size: 60px;
+    font-family: "Orbitron", sans-serif;
+    letter-spacing: 7px;
 }
 
 @media (max-width: 768px) {

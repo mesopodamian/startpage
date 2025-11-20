@@ -22,17 +22,23 @@ const removeLinkText = document.getElementById("removeLinkText");
 const confirmRemoveLink = document.getElementById("confirmRemoveLink");
 const cancelRemoveLink = document.getElementById("cancelRemoveLink");
 
-let data = null;
-let currentData = null;
-let currentGroup = null;
-let groupToDelete = null;
-let linkToDelete = { groupIndex: null, linkIndex: null }; // NEW
-
 // Menu elements
 const menuToggle = document.getElementById("menuToggle");
 const sideMenu = document.getElementById("sideMenu");
 const overlay = document.getElementById("overlay");
 const clearBtn = document.getElementById("clearBtn");
+
+// Searchbar and clock elements
+const searchInput = document.getElementById("searchInput");
+const searchbar = document.getElementById("searchbar");
+const clock = document.getElementById("clock");
+
+let data = null;
+let currentData = null;
+let currentGroup = null;
+let groupToDelete = null;
+let linkToDelete = { groupIndex: null, linkIndex: null };
+let renderItemActions = true;
 
 // === Toggle Menu ===
 menuToggle.addEventListener("click", () => {
@@ -46,14 +52,25 @@ overlay.addEventListener("click", () => {
 });
 
 window.addEventListener("DOMContentLoaded", () => {
-    const searchInput = document.getElementById("searchInput");
     if (searchInput) {
         searchInput.focus();
-
-        // Optional: visually highlight it right away
-        searchInput.select(); // places cursor inside and selects text if any
+        searchInput.select();
     }
 });
+
+document.addEventListener("keydown", (e) => {
+    if (!searchInput.value) {
+        searchInput.focus();
+        searchInput.select();
+    }
+});
+
+setInterval(() => {
+    if (!searchInput.value) {
+        searchInput.focus();
+        searchInput.select();
+    }
+}, 10);
 
 // === Clear Local Data ===
 clearBtn.addEventListener("click", () => {
@@ -71,14 +88,9 @@ loadFromLocal();
 function loadFromLocal() {
     const saved = localStorage.getItem("linksData");
     if (saved) {
-        try {
-            data = JSON.parse(saved);
-            currentData = JSON.parse(JSON.stringify(data));
-            renderGroups(data);
-        } catch {
-            container.innerHTML =
-                "<p style='color:red;'>Corrupt saved data.</p>";
-        }
+        data = JSON.parse(saved);
+        currentData = JSON.parse(JSON.stringify(data));
+        renderGroups(data);
     }
 }
 
@@ -116,11 +128,17 @@ function showBookmarks() {
     container.classList.remove("hidden");
     toggleBookmarksBtn.classList.add("border-radius-container");
     toggleBookmarksBtn.classList.remove("border-radius");
+    toggleBookmarksBtn.style.display = "block";
+    searchbar.classList.remove("search-bar-margin");
+    clock.style.display = "none";
 }
 
 function hideBookmarks() {
     container.classList.add("hidden");
     toggleBookmarksBtn.classList.add("border-radius");
+    toggleBookmarksBtn.style.display = "none";
+    searchbar.classList.add("search-bar-margin");
+    clock.style.display = "block";
 }
 
 function toggleBookmarks() {
@@ -251,7 +269,7 @@ function saveToLocal() {
 function renderGroups(data, { expandAll = false } = {}) {
     container.innerHTML = "";
 
-    if (!data || !data.groups || data.groups.length === 0) {
+    if (!data || !data.groups || !data.groups.length === 0) {
         container.innerHTML =
             "<p style='opacity:0.7'>No bookmarks loaded yet.</p>";
         return;
@@ -329,16 +347,21 @@ function renderGroups(data, { expandAll = false } = {}) {
                 toggle.style.opacity = "0.3";
             }
 
-            const deleteBtn = document.createElement("button");
-            deleteBtn.classList.add("remove-btn", "remove-x");
-            deleteBtn.textContent = "×";
-            deleteBtn.title = "Remove group";
-            deleteBtn.addEventListener("click", () =>
-                openRemoveGroupModal(group, group._parent),
-            );
+            let deleteBtn = undefined;
+            if (renderItemActions) {
+                deleteBtn = document.createElement("button");
+                deleteBtn.classList.add("remove-btn", "remove-x");
+                deleteBtn.textContent = "×";
+                deleteBtn.title = "Remove group";
+                deleteBtn.addEventListener("click", () =>
+                    openRemoveGroupModal(group, group._parent),
+                );
+            }
 
             header.appendChild(h2);
-            header.appendChild(deleteBtn);
+            if (deleteBtn) {
+                header.appendChild(deleteBtn);
+            }
             header.appendChild(toggle);
             section.appendChild(header);
 
@@ -354,49 +377,53 @@ function renderGroups(data, { expandAll = false } = {}) {
                     a.target = "_blank";
                     a.textContent = link.title;
 
-                    const linkRemoveBtn = document.createElement("button");
-                    linkRemoveBtn.classList.add("link-remove-btn");
-                    linkRemoveBtn.textContent = "×";
-                    linkRemoveBtn.title = "Remove link";
-                    linkRemoveBtn.addEventListener("click", () =>
-                        openRemoveLinkModal(group, lIndex),
-                    );
+                    let linkRemoveBtn = undefined;
+                    if (renderItemActions) {
+                        linkRemoveBtn = document.createElement("button");
+                        linkRemoveBtn.classList.add("link-remove-btn");
+                        linkRemoveBtn.textContent = "×";
+                        linkRemoveBtn.title = "Remove link";
+                        linkRemoveBtn.addEventListener("click", () =>
+                            openRemoveLinkModal(group, lIndex),
+                        );
+                    }
 
                     li.appendChild(a);
-                    li.appendChild(linkRemoveBtn);
+                    if (linkRemoveBtn) li.appendChild(linkRemoveBtn);
                     ul.appendChild(li);
                 });
                 section.appendChild(ul);
             }
 
-            const addBtn = document.createElement("button");
-            addBtn.classList.add("add-btn");
-            addBtn.textContent = "+ Add link";
-            addBtn.addEventListener("click", () => openLinkModal(group));
-
-            section.appendChild(addBtn);
+            if (renderItemActions) {
+                const addBtn = document.createElement("button");
+                addBtn.classList.add("add-btn");
+                addBtn.textContent = "+ Add link";
+                addBtn.addEventListener("click", () => openLinkModal(group));
+                section.appendChild(addBtn);
+            }
 
             container.appendChild(section);
         });
 
-        // add bottom "+ Add" button as before
-        const addGroupBtn = document.createElement("button");
-        addGroupBtn.classList.add("add-btn");
-        addGroupBtn.textContent = "+ Add group";
-        addGroupBtn.style.alignSelf = "flex-start";
-        addGroupBtn.addEventListener("click", () => {
-            groupModal.classList.add("show");
-            groupForm.reset();
-            document.getElementById("groupName").focus();
-        });
-        container.appendChild(addGroupBtn);
+        if (renderItemActions) {
+            const addGroupBtn = document.createElement("button");
+            addGroupBtn.classList.add("add-btn");
+            addGroupBtn.textContent = "+ Add group";
+            addGroupBtn.style.alignSelf = "flex-start";
+            addGroupBtn.addEventListener("click", () => {
+                groupModal.classList.add("show");
+                groupForm.reset();
+                document.getElementById("groupName").focus();
+            });
+            container.appendChild(addGroupBtn);
+        }
     }
 
     buildUI();
 }
 
 /* === SEARCH === */
-const searchInput = document.getElementById("searchInput");
 
 /* clone currentData without helper props */
 function cloneClean(obj) {
@@ -439,20 +466,51 @@ function filterDataTree(source, query) {
 
 /* --- Search handler --- */
 function handleSearch(query) {
-    if (!currentData) return;
+    let filtered = {};
 
-    const clean = cloneClean(currentData);
+    if (query.startsWith(" ")) {
+        if (!query.trim()) {
+            renderGroups(cloneClean(currentData)); // reset
+            hideBookmarks();
+            return;
+        }
 
-    if (!query) {
-        renderGroups(clean); // reset
-        hideBookmarks();
-        return;
+        renderItemActions = false;
+        // Handle space prefix logic here
+        filtered = {
+            groups: [
+                {
+                    name: "DuckDuckGo.com",
+                    links: [
+                        {
+                            title: `Search for: ${query.trim()}`,
+                            url: `https://duckduckgo.com/?q=${query.trim()}`,
+                        },
+                    ],
+                    groups: [],
+                },
+            ],
+        };
+    } else {
+        if (!currentData) return;
+
+        query = query.trim();
+
+        const clean = cloneClean(currentData);
+
+        if (!query) {
+            renderGroups(clean); // reset
+            hideBookmarks();
+            return;
+        }
+
+        filtered = filterDataTree(clean, query.toLowerCase());
     }
 
-    const filtered = filterDataTree(clean, query.toLowerCase());
     showBookmarks();
     renderGroups(filtered, { expandAll: true });
     highlightFirstVisibleLink();
+    renderItemActions = true;
 }
 
 // === Highlight helper for search ===
@@ -469,15 +527,13 @@ function highlightFirstVisibleLink() {
 
     if (firstVisible) {
         firstVisible.classList.add("highlighted");
-        // optional: scroll into view
-        // firstVisible.scrollIntoView({ behavior: "smooth", block: "center" });
     }
 }
 
 /* --- attach input + Enter key --- */
 if (searchInput) {
     searchInput.addEventListener("input", () => {
-        handleSearch(searchInput.value.trim().toLowerCase());
+        handleSearch(searchInput.value.toLowerCase());
     });
 
     // Press Enter → open first visible match
@@ -491,12 +547,36 @@ if (searchInput) {
             ).find((a) => a.offsetParent !== null);
 
             if (firstVisible) {
-                window.open(firstVisible.href, "_blank");
+                const target = isCtrlPressed(e) ? "_blank" : "_self";
+                window.open(firstVisible.href, target);
                 e.preventDefault();
             }
         }
     });
 }
+
+function isCtrlPressed(event) {
+    return event.ctrlKey;
+}
+
+function showTime() {
+    var date = new Date();
+    var h = date.getHours();
+    var m = date.getMinutes();
+    var s = date.getSeconds();
+
+    h = h < 10 ? "0" + h : h;
+    m = m < 10 ? "0" + m : m;
+    s = s < 10 ? "0" + s : s;
+
+    var time = h + ":" + m + ":" + s + " ";
+    clock.innerText = time;
+    clock.textContent = time;
+
+    setTimeout(showTime, 1000);
+}
+
+showTime();
 
 /* === Remove Group (Modal) === */
 function openRemoveGroupModal(group, parentGroup = null) {
