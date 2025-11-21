@@ -1,7 +1,4 @@
 const container = document.querySelector("main.container");
-const loadBtn = document.getElementById("loadBtn");
-const fileInput = document.getElementById("fileInput");
-const downloadBtn = document.getElementById("downloadBtn");
 
 // Modals
 const linkModal = document.getElementById("linkModal");
@@ -26,6 +23,9 @@ const cancelRemoveLink = document.getElementById("cancelRemoveLink");
 const menuToggle = document.getElementById("menuToggle");
 const sideMenu = document.getElementById("sideMenu");
 const overlay = document.getElementById("overlay");
+const loadBtn = document.getElementById("loadBtn");
+const fileInput = document.getElementById("fileInput");
+const downloadBtn = document.getElementById("downloadBtn");
 const clearBtn = document.getElementById("clearBtn");
 const artNameSelect = document.getElementById("artName");
 const randomArtCheckbox = document.getElementById("randomArt");
@@ -43,7 +43,7 @@ let data = null;
 let currentData = null;
 let currentGroup = null;
 let groupToDelete = null;
-let linkToDelete = { groupIndex: null, linkIndex: null };
+let linkToDelete = { groupId: null, linkIndex: null };
 let renderItemActions = true;
 
 let selected = undefined;
@@ -146,8 +146,8 @@ fileInput.addEventListener("change", (e) => {
             saveToLocal();
             renderGroups(data);
         } catch {
-            container.innerHTML =
-                "<p style='color:red;'>Invalid JSON structure.</p>";
+            // TODO: Show some error message to the user
+            console.error("Invalid JSON structure");
         }
     };
     reader.readAsText(file);
@@ -252,6 +252,7 @@ function parseBookmarksHTML(htmlString) {
                     name: folderName,
                     links: [],
                     groups: subGroups,
+                    id: uuidv4(),
                 };
 
                 // collect direct links inside this folder (not nested)
@@ -628,8 +629,11 @@ confirmRemoveGroup.addEventListener("click", () => {
     const { group, parent } = groupToDelete;
 
     function removeFromArray(arr, target) {
-        const idx = arr.indexOf(target);
-        if (idx !== -1) arr.splice(idx, 1);
+        var group = arr.filter((x) => x.id == target.id)[0];
+        if (group) {
+            var idx = arr.indexOf(group);
+            if (idx !== -1) arr.splice(idx, 1);
+        }
     }
 
     if (parent) {
@@ -641,7 +645,7 @@ confirmRemoveGroup.addEventListener("click", () => {
     }
 
     saveToLocal();
-    renderGroups(data);
+    renderGroups(data, { showEmpty: true, expandAll: true });
     closeRemoveGroupModal();
 });
 
@@ -652,7 +656,7 @@ removeGroupModal.addEventListener("click", (e) => {
 
 /* === Remove Link (Modal) === */
 function openRemoveLinkModal(group, linkIndex) {
-    linkToDelete = { group, linkIndex };
+    linkToDelete = { groupId: group.id, linkIndex };
 
     const linkName = group.links[linkIndex].title;
     removeLinkText.textContent = `Remove link "${linkName}"?`;
@@ -661,16 +665,20 @@ function openRemoveLinkModal(group, linkIndex) {
 
 function closeRemoveLinkModal() {
     removeLinkModal.classList.remove("show");
-    linkToDelete = { groupIndex: null, linkIndex: null };
+    linkToDelete = { groupId: null, linkIndex: null };
 }
 
 confirmRemoveLink.addEventListener("click", () => {
-    const { group, linkIndex } = linkToDelete;
-    if (!group || linkIndex == null) return;
+    const { groupId, linkIndex } = linkToDelete;
+    if (!groupId || linkIndex == null) return;
 
-    group.links.splice(linkIndex, 1);
-    saveToLocal();
-    renderGroups(data);
+    let group = findGroupRecursively(data, groupId);
+    if (group) {
+        group.links.splice(linkIndex, 1);
+        saveToLocal();
+        renderGroups(data, { showEmpty: true, expandAll: true });
+    }
+
     closeRemoveLinkModal();
 });
 
@@ -696,15 +704,19 @@ linkModal.addEventListener("click", (e) => {
 
 cancelLinkModal.addEventListener("click", closeLinkModal);
 
+// Add new link handler
 linkForm.addEventListener("submit", (e) => {
     e.preventDefault();
     const title = document.getElementById("linkTitle").value.trim();
     const url = document.getElementById("linkUrl").value.trim();
     if (!title || !url) return;
     const newLink = { title, url };
-    currentGroup.links.push(newLink);
-    saveToLocal();
-    renderGroups(data);
+    let group = findGroupRecursively(data, currentGroup.id);
+    if (group) {
+        group.links.push(newLink);
+        saveToLocal();
+        renderGroups(data, { expandAll: true, showEmpty: true });
+    }
     closeLinkModal();
 });
 
@@ -712,12 +724,14 @@ linkForm.addEventListener("submit", (e) => {
 groupModal.addEventListener("click", (e) => {
     if (e.target === groupModal) closeGroupModal();
 });
+
 cancelGroupModal.addEventListener("click", closeGroupModal);
 
 function closeGroupModal() {
     groupModal.classList.remove("show");
 }
 
+// Add new group handler
 groupForm.addEventListener("submit", (e) => {
     e.preventDefault();
     const name = document.getElementById("groupName").value.trim();
@@ -726,11 +740,50 @@ groupForm.addEventListener("submit", (e) => {
         data = { groups: [] };
         currentData = JSON.parse(JSON.stringify(data));
     }
-    data.groups.push({ name, links: [] });
+    data.groups.push({ name, links: [], groups: [], id: uuidv4() });
     saveToLocal();
-    renderGroups(data);
+    renderGroups(data, { expandAll: true, showEmpty: true });
     closeGroupModal();
 });
+
+function findGroupRecursively(data, groupId) {
+    if (!data || typeof data !== "object") {
+        return null;
+    }
+
+    if (Array.isArray(data)) {
+        for (const item of data) {
+            const result = findGroupRecursively(item, groupId);
+            if (result) {
+                return result;
+            }
+        }
+        return null;
+    }
+
+    if (data.groups && Array.isArray(data.groups)) {
+        for (const group of data.groups) {
+            if (group.id === groupId) {
+                return group;
+            }
+            const result = findGroupRecursively(group, groupId);
+            if (result) {
+                return result;
+            }
+        }
+    }
+
+    if (data.links && Array.isArray(data.links)) {
+        for (const link of data.links) {
+            const result = findGroupRecursively(link, groupId);
+            if (result) {
+                return result;
+            }
+        }
+    }
+
+    return null;
+}
 
 /* === Download JSON === */
 downloadBtn.addEventListener("click", () => {
@@ -755,3 +808,12 @@ downloadBtn.addEventListener("click", () => {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
 });
+
+function uuidv4() {
+    return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, (c) =>
+        (
+            +c ^
+            (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (+c / 4)))
+        ).toString(16),
+    );
+}
