@@ -50,12 +50,17 @@ let groupToDelete = null;
 let linkToDelete = { groupId: null, linkIndex: null };
 let renderItemActions = true;
 
+let modalOpen = false;
+
 let selected = undefined;
 
 const helpText = `
 '.' show all bookmarks
 ' ' search the web
 `;
+
+const BOOKMARKS_SEARCH_CHAR = ".";
+const WEB_SEARCH_CHAR = " ";
 
 window.addEventListener("DOMContentLoaded", () => {
     hideBookmarks();
@@ -66,30 +71,38 @@ window.addEventListener("DOMContentLoaded", () => {
 menuToggle.addEventListener("click", () => {
     sideMenu.classList.toggle("open");
     overlay.classList.toggle("show");
+    modalOpen = true;
 });
 
 overlay.addEventListener("click", () => {
     sideMenu.classList.remove("open");
     overlay.classList.remove("show");
+    modalOpen = false;
 });
 
+// Move highlighted link with arrow keys
 document.addEventListener("keydown", (e) => {
     if (e.key == "ArrowUp") {
         navigateLinks(-1);
         e.preventDefault();
     }
     if (e.key == "ArrowDown") {
+        if (!searchInput.value) {
+            searchInput.value = BOOKMARKS_SEARCH_CHAR;
+            handleSearch(searchInput.value);
+            return;
+        }
+
         navigateLinks(1);
         e.preventDefault();
     }
 });
 
 document.addEventListener("keydown", (e) => {
-    if (e.srcElement === remoteServerAddressInput) {
-        return;
-    }
+    if (modalOpen) return;
 
-    if (!searchInput.value) {
+    if (!searchInput.value || searchInput.value === BOOKMARKS_SEARCH_CHAR) {
+        if (e.key == "ArrowUp" || e.key == "ArrowDown") return;
         searchInput.focus();
         searchInput.select();
     }
@@ -532,7 +545,7 @@ function filterDataTree(source, query) {
 function handleSearch(query) {
     let filtered = {};
 
-    if (query.startsWith(" ")) {
+    if (query.startsWith(WEB_SEARCH_CHAR)) {
         if (!query.trim()) {
             renderGroups(cloneClean(currentData)); // reset
             hideBookmarks();
@@ -568,7 +581,7 @@ function handleSearch(query) {
             return;
         }
 
-        filtered = query.startsWith(".")
+        filtered = query.startsWith(BOOKMARKS_SEARCH_CHAR)
             ? clean
             : filterDataTree(clean, query.toLowerCase());
     }
@@ -576,7 +589,7 @@ function handleSearch(query) {
     showBookmarks();
     renderGroups(filtered, {
         expandAll: true,
-        showEmpty: query.startsWith("."),
+        showEmpty: query.startsWith(BOOKMARKS_SEARCH_CHAR),
     });
     navigateLinks(0);
     renderItemActions = true;
@@ -628,6 +641,7 @@ showTime();
 
 /* === Remove Group (Modal) === */
 function openRemoveGroupModal(group, parentGroup = null) {
+    modalOpen = true;
     groupToDelete = { group, parent: parentGroup };
 
     const name = group.name || "Unnamed Group";
@@ -638,6 +652,7 @@ function openRemoveGroupModal(group, parentGroup = null) {
 function closeRemoveGroupModal() {
     removeGroupModal.classList.remove("show");
     groupToDelete = null;
+    modalOpen = false;
 }
 
 confirmRemoveGroup.addEventListener("click", () => {
@@ -674,6 +689,7 @@ removeGroupModal.addEventListener("click", (e) => {
 
 /* === Remove Link (Modal) === */
 function openRemoveLinkModal(group, linkIndex) {
+    modalOpen = true;
     linkToDelete = { groupId: group.id, linkIndex };
 
     const linkName = group.links[linkIndex].title;
@@ -684,6 +700,7 @@ function openRemoveLinkModal(group, linkIndex) {
 function closeRemoveLinkModal() {
     removeLinkModal.classList.remove("show");
     linkToDelete = { groupId: null, linkIndex: null };
+    modalOpen = false;
 }
 
 confirmRemoveLink.addEventListener("click", () => {
@@ -708,6 +725,7 @@ removeLinkModal.addEventListener("click", (e) => {
 
 /* === Link Modal === */
 function openLinkModal(group) {
+    modalOpen = true;
     currentGroup = group;
     linkModal.classList.add("show");
     linkForm.reset();
@@ -715,6 +733,7 @@ function openLinkModal(group) {
 
 function closeLinkModal() {
     linkModal.classList.remove("show");
+    modalOpen = false;
 }
 
 linkModal.addEventListener("click", (e) => {
@@ -749,6 +768,7 @@ cancelGroupModal.addEventListener("click", closeGroupModal);
 
 function closeGroupModal() {
     groupModal.classList.remove("show");
+    modalOpen = false;
 }
 
 // Add new group handler
