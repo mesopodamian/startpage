@@ -191,7 +191,7 @@ function showBookmarks() {
     clock.style.display = "none";
     help.style.display = "none";
     hero.classList.remove("hero-top");
-    topContainer.classList.remove("top-container");
+    topContainer.classList.remove("top-container-hidden-items");
 
     art.style.display = "none";
 }
@@ -201,7 +201,7 @@ function hideBookmarks() {
     clock.style.display = "block";
     help.style.display = "flex";
     hero.classList.add("hero-top");
-    topContainer.classList.add("top-container");
+    topContainer.classList.add("top-container-hidden-items");
 
     art.style.display = "flex";
 }

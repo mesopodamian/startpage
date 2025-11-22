@@ -26,6 +26,10 @@ const artOptions = {
             name: "astronaut",
             url: "https://w.wallhaven.cc/full/qr/wallhaven-qrrlzr.jpg",
         },
+        {
+            name: "lagoon-town",
+            url: "https://w.wallhaven.cc/full/5y/wallhaven-5ygeg7.jpg",
+        },
     ],
 };
 
@@ -115,7 +119,13 @@ const setArt = (artName, random, save) => {
         randomArtCheckbox.checked = true;
     } else {
         if (!artName) return;
-        img.src = artOptions.images.filter((x) => x.name === artName)[0].url;
+        try {
+            img.src = artOptions.images.filter(
+                (x) => x.name === artName,
+            )[0].url;
+        } catch {
+            art.remove();
+        }
         artNameSelect.value = artName;
         randomArtCheckbox.checked = false;
     }

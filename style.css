@@ -67,8 +67,11 @@ html {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: calc(100vh - 200px);
     flex-direction: column;
+}
+
+.top-container-hidden-items {
+    min-height: calc(100vh - 200px);
 }
 
 body {
@@ -111,9 +114,6 @@ header h1 {
 /* === Main === */
 main.container {
     flex: 1;
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 2rem;
     padding: 2rem;
     margin: 0 auto;
     background: var(--color-card-bg);
@@ -122,6 +122,27 @@ main.container {
     opacity: 1;
     transition: opacity 0.25s ease;
     border-radius: var(--radius);
+}
+
+.section {
+    margin: 1rem 3rem;
+    padding: 0.5rem;
+    max-width: 1600px;
+    width: 80%;
+}
+
+.section .header {
+    cursor: pointer !important;
+    background-color: var(--color-header-bg);
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 1rem;
+    border: 1px solid var(--color-border);
+    background: var(--color-card-bg);
+    color: var(--color-text-main);
 }
 
 /* === Groups === */
@@ -347,7 +368,8 @@ ul.link-list {
     font-weight: 500;
 }
 
-.modal-content,
+.modal-content input[type="text"],
+.modal-content input[type="url"],
 .menu-item input[type="text"] {
     width: 100%;
     padding: 0.5rem;
@@ -484,7 +506,8 @@ select {
 }
 
 .hero {
-    min-width: 60%;
+    max-width: 1000px;
+    width: 60%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -506,7 +529,7 @@ select {
 }
 
 .search-bar {
-    min-width: 50%;
+    min-width: 100%;
     margin-bottom: 30px;
 }
 
@@ -531,10 +554,11 @@ select {
     display: flex;
     justify-content: center;
     max-height: 200px;
+    margin-bottom: 65px;
 }
 
 .art img {
-    width: 50%;
+    width: 100%;
     padding: 5px;
     border: 1px solid var(--color-border);
     object-fit: cover;
@@ -542,8 +566,7 @@ select {
 
 .help {
     display: flex;
-    margin-top: 65px;
-    min-width: 50%;
+    min-width: 100%;
     color: var(--color-neutral-4);
     font-size: 0.5em;
 }
@@ -574,25 +597,6 @@ select {
 
 .link-item.highlighted a {
     color: #fff;
-}
-
-.section {
-    margin: 1rem 3rem;
-    padding: 0.5rem;
-}
-
-.section .header {
-    cursor: pointer !important;
-    background-color: var(--color-header-bg);
-    font-size: 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.5rem;
-    padding: 1rem;
-    border: 1px solid var(--color-border);
-    background: var(--color-card-bg);
-    color: var(--color-text-main);
 }
 
 .border-radius {
@@ -628,10 +632,15 @@ select {
         margin-bottom: 10px;
     }
 
+    .hero {
+        width: 100%;
+    }
+
     .art {
         width: 100%;
         padding: 5px;
         margin-top: 10px;
+        margin-bottom: 10px;
     }
 
     .art img {
@@ -644,6 +653,5 @@ select {
     .help {
         width: 100%;
         padding: 5px;
-        margin-top: 10px;
     }
 }
