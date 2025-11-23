@@ -30,6 +30,10 @@ const artOptions = {
             name: "lagoon-town",
             url: "https://w.wallhaven.cc/full/5y/wallhaven-5ygeg7.jpg",
         },
+        {
+            name: "hacker",
+            url: "https://w.wallhaven.cc/full/3q/wallhaven-3qqqkv.jpg",
+        },
     ],
 };
 
