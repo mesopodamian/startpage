@@ -124,4 +124,5 @@ public class Data {
 public class ArtSettings {
     public bool Random { get; set; }
     public string? ArtName { get; set; }
+    public bool ClockColorFromArt { get; set; }
 }

@@ -39,6 +39,9 @@ const searchInput = document.getElementById("searchInput");
 const help = document.getElementById("help");
 const topContainer = document.getElementById("topcontainer");
 
+// root element
+const rootElement = document.documentElement;
+
 const LINKS_DATA_KEY = "linksData";
 const REMOTE_SERVER_ADDRESS_SETTING_KEY = "remoteServerAddress";
 

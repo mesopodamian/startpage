@@ -15,6 +15,7 @@
     --color-border-strong: #2c2c2c;
 
     /* === Accent / interactive colors === */
+    --clock-color: #7aa2b8;
     --color-accent: #7aa2b8;
     --color-accent-hover: #a4c1d0;
 
@@ -521,7 +522,7 @@ select {
 }
 
 .clock {
-    color: var(--color-accent);
+    color: var(--clock-color);
     font-size: 60px;
     font-family: "Orbitron", sans-serif;
     letter-spacing: 7px;
