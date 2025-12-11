@@ -144,10 +144,9 @@ function loadThemeSettingsFromRemote() {
         .then((data) => {
             setArt(data.artName, data.randomArt, false);
             setAccentColorSetting(data.accentColorFromArt);
+            saveThemeSettingsToLocal();
         })
         .catch((error) => console.error(error));
-
-    saveThemeSettingsToLocal();
 }
 
 const setArt = (artName, random, save) => {
