@@ -11,6 +11,7 @@
     /* === Text & border colors === */
     --color-text-main: #e2e2e2; /* main text */
     --color-text-muted: #b8b8b8; /* footer / dim text */
+    --color-white: #ffffff;
     --color-border: rgba(255, 255, 255, 0.08); /* subtle card border */
     --color-border-strong: #2c2c2c;
 
@@ -32,16 +33,27 @@
     --color-danger-hover: #e66a64;
     --color-danger-text: #ff6b6b;
 
+    /* === Spacing scale === */
+    --space-xs: 0.25rem;
+    --space-sm: 0.5rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+
     /* === Others === */
-    --radius-small: 0px;
-    --radius: 0px;
+    --radius-small: 0;
+    --radius: 0;
     --font-main: "Inter", "Segoe UI", Roboto, sans-serif;
     --shadow-card: 0 0 10px rgba(0, 0, 0, 0.25);
     --shadow-sidebar: -4px 0 12px rgba(0, 0, 0, 0.4);
+    --transition-fast: 0.15s ease;
+    --transition-normal: 0.25s ease;
 }
 
 /* === Reset === */
-* {
+*,
+*::before,
+*::after {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -85,18 +97,13 @@ body {
 }
 
 main.container.hidden {
-    display: none;
-}
-
-main.container.hidden {
-    display: block; /* keep layout for fade */
     opacity: 0;
     pointer-events: none;
 }
 
 /* === Header === */
 header {
-    padding: 1.2rem 1rem;
+    padding: var(--space-lg) var(--space-md);
     position: sticky;
     top: 0;
     z-index: 10;
@@ -115,52 +122,40 @@ header h1 {
 /* === Main === */
 main.container {
     flex: 1;
-    padding: 2rem;
+    padding: var(--space-xl);
     margin: 0 auto;
     background: var(--color-card-bg);
     border: 1px solid var(--color-border);
     box-shadow: var(--shadow-card);
     opacity: 1;
-    transition: opacity 0.25s ease;
+    transition: opacity var(--transition-normal);
     border-radius: var(--radius);
 }
 
 .section {
-    margin: 1rem 3rem;
-    padding: 0.5rem;
+    margin: var(--space-md) 3rem;
+    padding: var(--space-sm);
     max-width: 1600px;
     width: 80%;
-}
-
-.section .header {
-    cursor: pointer !important;
-    background-color: var(--color-header-bg);
-    font-size: 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.5rem;
-    padding: 1rem;
-    border: 1px solid var(--color-border);
-    background: var(--color-card-bg);
-    color: var(--color-text-main);
 }
 
 /* === Groups === */
 section.group {
     background: var(--color-card-bg);
-    padding: 1.5rem 1.8rem;
+    padding: var(--space-lg) 1.8rem;
     border-radius: var(--radius);
     border: 1px solid var(--color-border);
     box-shadow: var(--shadow-card);
-    margin-bottom: 20px;
+    margin-bottom: var(--space-lg);
 }
 
 .group-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 0.5rem;
+    gap: var(--space-sm);
+    cursor: pointer;
+    user-select: none;
 }
 
 .group-header h2 {
@@ -170,15 +165,6 @@ section.group {
     flex: 1;
 }
 
-/* === Group header clickable === */
-.group-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    cursor: pointer;
-    user-select: none;
-}
-
 /* Toggle icon (▶ ▼) */
 .toggle-icon {
     font-size: 0.9rem;
@@ -186,15 +172,7 @@ section.group {
     margin-left: 0.6rem;
 }
 
-/* Nested group container */
-.nested-container {
-    margin-left: 1rem;
-    border-left: 2px solid var(--color-border);
-    padding-left: 1rem;
-    transition: all 0.2s ease-in-out;
-}
-
-/* === Remove group “×” === */
+/* === Remove group "×" === */
 .remove-btn.remove-x {
     background: transparent;
     color: var(--color-text-muted);
@@ -203,53 +181,46 @@ section.group {
     line-height: 1;
     cursor: pointer;
     padding: 0;
-    margin-left: 0.5rem;
+    margin-left: var(--space-sm);
     display: flex;
     align-items: center;
     justify-content: center;
     width: 1.6rem;
     height: 1.6rem;
+    transition: color var(--transition-fast);
 }
 
 .remove-btn.remove-x:hover {
     color: var(--color-danger-text);
 }
 
-.toggle-icon {
-    font-size: 0.9rem;
-    color: var(--color-text-muted);
-    margin-left: 0.6rem;
-}
-
-.group-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    cursor: pointer;
-    user-select: none;
-}
-
 .link-item mark {
     background: var(--color-accent);
-    color: #fff;
+    color: var(--color-white);
     border-radius: 2px;
 }
 
 /* === Add / generic buttons === */
 .add-btn {
-    margin-top: 5px;
+    margin-top: var(--space-xs);
     background: var(--color-accent);
-    color: #fff;
+    color: var(--color-white);
     border: none;
     border-radius: var(--radius);
     padding: 0.4rem 0.8rem;
     cursor: pointer;
     font-weight: 500;
     font-size: 0.9rem;
+    transition: background var(--transition-fast);
 }
 
 .add-btn:hover {
     background: var(--color-accent-hover);
+}
+
+.add-btn:focus-visible {
+    outline: 2px solid var(--color-accent-hover);
+    outline-offset: 2px;
 }
 
 .remove-btn {
@@ -260,29 +231,43 @@ section.group {
     padding: 0.4rem 0.8rem;
     cursor: pointer;
     font-size: 0.85rem;
+    transition: background var(--transition-fast), color var(--transition-fast);
 }
+
 .remove-btn:hover {
     background: var(--color-neutral-4);
     color: var(--color-text-main);
 }
 
+.remove-btn:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
 /* === Danger buttons === */
 .danger-btn {
     background: var(--color-danger);
-    color: #fff;
+    color: var(--color-white);
     border: none;
     border-radius: var(--radius);
-    padding: 0.5rem 1rem;
+    padding: var(--space-sm) var(--space-md);
     cursor: pointer;
     font-weight: 500;
+    transition: background var(--transition-fast);
 }
+
 .danger-btn:hover {
     background: var(--color-danger-hover);
 }
 
+.danger-btn:focus-visible {
+    outline: 2px solid var(--color-danger-hover);
+    outline-offset: 2px;
+}
+
 /* === Link list === */
 .link-list {
-    margin: 15px 0px;
+    margin: var(--space-md) 0;
 }
 
 ul.link-list {
@@ -298,22 +283,32 @@ ul.link-list {
     align-items: center;
     background: var(--color-neutral-1);
     border-radius: var(--radius);
-    padding: 0.6rem 1rem;
+    padding: 0.6rem var(--space-md);
+    transition: background var(--transition-fast);
 }
+
 .link-item:hover {
     background: var(--color-neutral-2);
 }
+
 .link-item a {
     flex: 1;
     color: var(--color-text-main);
     text-decoration: none;
     font-weight: 500;
+    transition: color var(--transition-fast);
 }
+
 .link-item a:hover {
     color: var(--color-accent-hover);
 }
 
-/* === Per-link delete “×” === */
+.link-item a:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+/* === Per-link delete "×" === */
 .link-remove-btn {
     background: transparent;
     border: none;
@@ -327,10 +322,16 @@ ul.link-list {
     width: 1.2rem;
     height: 1.2rem;
     padding: 0;
+    transition: color var(--transition-fast);
 }
 
 .link-remove-btn:hover {
     color: var(--color-danger-text);
+}
+
+.link-remove-btn:focus-visible {
+    outline: 2px solid var(--color-danger);
+    outline-offset: 2px;
 }
 
 /* === Modals === */
@@ -351,7 +352,7 @@ ul.link-list {
 .modal-content {
     background: var(--color-card-bg);
     color: var(--color-text-main);
-    padding: 1.5rem 2rem;
+    padding: var(--space-lg) var(--space-xl);
     border-radius: var(--radius);
     width: 100%;
     max-width: 400px;
@@ -359,7 +360,7 @@ ul.link-list {
 }
 
 .modal-content h2 {
-    margin-bottom: 1rem;
+    margin-bottom: var(--space-md);
     color: var(--color-accent);
 }
 
@@ -373,23 +374,31 @@ ul.link-list {
 .modal-content input[type="url"],
 .menu-item input[type="text"] {
     width: 100%;
-    padding: 0.5rem;
-    margin-top: 0.3rem;
+    padding: var(--space-sm);
+    margin-top: var(--space-xs);
     border-radius: var(--radius);
     border: 1px solid var(--color-border-strong);
     background: var(--color-modal-bg);
     color: var(--color-text-main);
+    transition: border-color var(--transition-fast);
+}
+
+.modal-content input[type="text"]:focus,
+.modal-content input[type="url"]:focus,
+.menu-item input[type="text"]:focus {
+    outline: none;
+    border-color: var(--color-accent);
 }
 
 .modal-actions {
-    margin-top: 1.2rem;
+    margin-top: var(--space-lg);
     display: flex;
     justify-content: flex-end;
     gap: 0.6rem;
 }
 
 .modal-actions button {
-    padding: 0.5rem 1rem;
+    padding: var(--space-sm) var(--space-md);
     border: none;
     border-radius: var(--radius);
     cursor: pointer;
@@ -397,25 +406,25 @@ ul.link-list {
 
 .modal-actions button[type="submit"] {
     background: var(--color-accent);
-    color: #fff;
+    color: var(--color-white);
 }
 
 .modal-actions button[type="submit"]:hover {
     background: var(--color-accent-hover);
 }
 
-.modal-actions #cancelBtn {
+.modal-actions button[type="button"] {
     background: var(--color-neutral-3);
     color: var(--color-text-main);
 }
 
-.modal-actions #cancelBtn:hover {
+.modal-actions button[type="button"]:hover {
     background: var(--color-neutral-4);
 }
 
 /* === Text highlight inside modal === */
 #removeGroupText {
-    margin-top: 0.5rem;
+    margin-top: var(--space-sm);
     color: var(--color-text-main);
 }
 
@@ -428,13 +437,13 @@ ul.link-list {
     height: 100%;
     background: var(--color-sidebar-bg);
     box-shadow: var(--shadow-sidebar);
-    padding: 2rem 1rem;
-    transition: right 0.25s ease-in-out;
+    padding: var(--space-xl) var(--space-md);
+    transition: right var(--transition-normal);
     z-index: 120;
     border-left: 1px solid var(--color-border-strong);
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: var(--space-md);
 }
 
 .side-menu.open {
@@ -442,7 +451,7 @@ ul.link-list {
 }
 
 .menu-item {
-    margin: 10px 0px;
+    margin: var(--space-sm) 0;
 }
 
 .menu-item button,
@@ -451,7 +460,7 @@ select {
 }
 
 .menu-item .add-btn {
-    padding: 5px 0px;
+    padding: var(--space-xs) 0;
 }
 
 .menu-item p {
@@ -466,7 +475,7 @@ select {
     background: var(--color-overlay-light);
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.25s ease-in-out;
+    transition: opacity var(--transition-normal);
     z-index: 110;
 }
 
@@ -497,13 +506,18 @@ select {
 
 .menu-btn:hover {
     background: var(--color-accent);
-    color: #fff;
+    color: var(--color-white);
     border-color: var(--color-accent-hover);
     transform: scale(1.05);
 }
 
 .menu-btn:active {
     transform: scale(0.97);
+}
+
+.menu-btn:focus-visible {
+    outline: 2px solid var(--color-accent-hover);
+    outline-offset: 2px;
 }
 
 .hero {
@@ -526,41 +540,42 @@ select {
     font-size: 60px;
     font-family: "Orbitron", sans-serif;
     letter-spacing: 7px;
-    margin-bottom: 40px;
+    margin-bottom: 2.5rem;
 }
 
 .search-bar {
     min-width: 100%;
-    margin-bottom: 30px;
+    margin-bottom: 1.875rem;
 }
 
 .search-bar input {
     min-width: 100%;
-    padding: 1rem 1.4rem;
+    padding: var(--space-md) 1.4rem;
     border-radius: var(--radius);
     border: 1px solid var(--color-border);
     background: var(--color-bg);
     color: var(--color-text-muted);
     font-size: 1em;
     outline: none;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .search-bar input:focus {
-    border-color: var(--color-border);
-    background: var(--color-bg);
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 2px rgba(122, 162, 184, 0.2);
 }
 
 .art {
-    margin-top: 35px;
+    margin-top: 2.2rem;
     display: flex;
     justify-content: center;
     max-height: 200px;
-    margin-bottom: 65px;
+    margin-bottom: 4rem;
 }
 
 .art img {
     width: 100%;
-    padding: 5px;
+    padding: var(--space-xs);
     border: 1px solid var(--color-border);
     object-fit: cover;
 }
@@ -572,42 +587,19 @@ select {
     font-size: 0.5em;
 }
 
-/* Nested groups indentation */
-.nested-groups {
-    margin-left: 1rem;
-    border-left: 2px solid var(--color-card-bg);
-    padding-left: 1rem;
-}
-
-.sub-group {
-    background: rgba(255, 255, 255, 0.02);
-}
-
-.sub-group .group-header h2 {
-    font-size: 1rem;
-}
-
-.sub-group .link-item {
-    background: rgba(255, 255, 255, 0.05);
-}
-
 /* === Search result highlight === */
 .link-item.highlighted {
     background: var(--color-accent);
 }
 
 .link-item.highlighted a {
-    color: #fff;
-}
-
-.border-radius {
-    border-radius: var(--radius);
+    color: var(--color-white);
 }
 
 @media (max-width: 768px) {
     main.container {
         grid-template-columns: 1fr;
-        padding: 1.5rem;
+        padding: var(--space-lg);
     }
 
     header h1 {
@@ -615,7 +607,7 @@ select {
     }
 
     .clock {
-        margin: 10px;
+        margin: var(--space-sm);
     }
 
     .section {
@@ -628,9 +620,9 @@ select {
     }
 
     .search-bar {
-        padding: 5px;
+        padding: var(--space-xs);
         width: 100%;
-        margin-bottom: 10px;
+        margin-bottom: var(--space-sm);
     }
 
     .hero {
@@ -639,20 +631,20 @@ select {
 
     .art {
         width: 100%;
-        padding: 5px;
-        margin-top: 10px;
-        margin-bottom: 10px;
+        padding: var(--space-xs);
+        margin-top: var(--space-sm);
+        margin-bottom: var(--space-sm);
     }
 
     .art img {
         width: 100%;
-        padding: 5px;
+        padding: var(--space-xs);
         border: 1px solid var(--color-border);
         object-fit: cover;
     }
 
     .help {
         width: 100%;
-        padding: 5px;
+        padding: var(--space-xs);
     }
 }
