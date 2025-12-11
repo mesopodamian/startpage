@@ -68,21 +68,6 @@ docker run -p 5000:8080 links-sync
 - **Backend**: .NET 10 Minimal API
 - **Fonts**: Google Fonts + DSEG7 for clock display
 
-## Project Structure
-
-```
-links/
-├── index.html      # Main HTML file
-├── main.js         # Core application logic
-├── theme.js        # Theme and artwork management
-├── style.css       # Styles and CSS variables
-├── Dockerfile      # Frontend container
-└── server/
-    └── sync/       # .NET sync server
-        ├── Program.cs
-        └── Dockerfile
-```
-
 ## License
 
 MIT
