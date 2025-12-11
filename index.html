@@ -31,37 +31,37 @@
         <aside class="side-menu" id="sideMenu" role="navigation" aria-label="Settings menu" aria-hidden="true">
             <div class="menu-content">
                 <div class="menu-item" role="group" aria-labelledby="dataLabel">
-                    <p id="dataLabel">Data</p>
-                    <button id="downloadBtn" class="add-btn" aria-label="Download bookmarks as JSON file">Download JSON</button>
+                    <p id="dataLabel">Import / Export</p>
+                    <button id="downloadBtn" class="add-btn" aria-label="Export bookmarks as JSON file">Export JSON</button>
                 </div>
                 <div class="menu-item">
-                    <button id="loadBtn" class="add-btn" aria-label="Load bookmarks from JSON file">Load JSON</button>
+                    <button id="loadBtn" class="add-btn" aria-label="Import bookmarks from JSON file">Import JSON</button>
                     <input type="file" id="fileInput" accept=".json" hidden aria-label="Select JSON file to import" />
                 </div>
                 <div class="menu-item">
-                    <button id="loadBookmarksBtn" class="add-btn" aria-label="Load bookmarks from Chrome HTML export">Load HTML</button>
+                    <button id="loadBookmarksBtn" class="add-btn" aria-label="Import bookmarks from browser HTML export">Import Bookmarks</button>
                     <input type="file" id="bookmarksFile" accept=".html" hidden aria-label="Select HTML bookmarks file to import" />
                 </div>
                 <div class="menu-item">
-                    <button id="clearBtn" class="add-btn danger-btn" aria-label="Clear all saved bookmarks">Clear All Data</button>
+                    <button id="clearBtn" class="add-btn danger-btn" aria-label="Reset all data">Reset Data</button>
                 </div>
                 <div class="menu-item" role="group" aria-labelledby="clockFontLabel">
-                    <p id="clockFontLabel">Clock font</p>
+                    <p id="clockFontLabel">Clock</p>
                     <select class="add-btn" id="clockFont" aria-label="Select clock font"><option value="">Select font...</option></select>
                 </div>
 
                 <div class="menu-item" role="group" aria-labelledby="imageLabel">
-                    <p id="imageLabel">Image</p>
-                    <select class="add-btn" id="artName" aria-label="Select background art"><option value="">Select art...</option></select>
-                    <label><input type="checkbox" id="randomArt" checked aria-label="Enable random art selection"> random art</label>
+                    <p id="imageLabel">Artwork</p>
+                    <select class="add-btn" id="artName" aria-label="Select background artwork"><option value="">Select artwork...</option></select>
+                    <label><input type="checkbox" id="randomArt" checked aria-label="Enable random artwork on load"> Randomize on load</label>
                     <br>
-                    <label><input type="checkbox" id="artAccentColor" aria-label="Use accent color from art"> accent color from art</label>
+                    <label><input type="checkbox" id="artAccentColor" aria-label="Match accent color to artwork"> Match accent color</label>
                 </div>
 
                 <div class="menu-item" role="group" aria-labelledby="syncLabel">
-                    <p id="syncLabel">Remote sync server address</p>
-                    <input type="text" id="remoteServerAddress" aria-label="Remote sync server URL" placeholder="https://example.com/api">
-                    <button type="button" id="remoteServerAddressSave" class="add-btn" aria-label="Save remote server address">Save</button>
+                    <p id="syncLabel">Sync Server</p>
+                    <input type="text" id="remoteServerAddress" aria-label="Remote sync server URL" placeholder="https://your-server.com/api">
+                    <button type="button" id="remoteServerAddressSave" class="add-btn" aria-label="Save sync server address">Save</button>
                 </div>
             </div>
         </aside>
@@ -73,7 +73,7 @@
             <div class="hero" id="hero">
                 <div id="clock" class="clock" role="timer" aria-label="Current time" aria-live="polite"></div>
                 <section class="search-bar" id="searchbar" role="search">
-                    <input type="text" id="searchInput" placeholder="Search..." autocomplete="off" aria-label="Search bookmarks or the web" />
+                    <input type="text" id="searchInput" placeholder="Start typing to search..." autocomplete="off" aria-label="Search bookmarks or the web" />
                 </section>
                 <div class="art" id="art" role="img" aria-label="Decorative artwork"></div>
                 <pre class="help" id="help" aria-label="Keyboard shortcuts help"></pre>
@@ -81,7 +81,7 @@
 
             <div class="section">
                 <main class="container" role="main" aria-label="Bookmarks">
-                    <p>There is nothing to show here...</p>
+                    <p>No bookmarks yet. Import your bookmarks or add a new group to get started.</p>
                 </main>
             </div>
         </div>
@@ -89,15 +89,15 @@
         <!-- Add Link Modal -->
         <div class="modal" id="linkModal" role="dialog" aria-labelledby="linkModalTitle" aria-modal="true" aria-hidden="true">
             <div class="modal-content">
-                <h2 id="linkModalTitle">Add a new link</h2>
+                <h2 id="linkModalTitle">New Bookmark</h2>
                 <form id="linkForm">
-                    <label for="linkTitle">Title</label>
-                    <input type="text" id="linkTitle" required aria-required="true" />
+                    <label for="linkTitle">Name</label>
+                    <input type="text" id="linkTitle" required aria-required="true" placeholder="My Website" />
                     <label for="linkUrl">URL</label>
-                    <input type="url" id="linkUrl" required aria-required="true" />
+                    <input type="url" id="linkUrl" required aria-required="true" placeholder="https://example.com" />
                     <div class="modal-actions">
-                        <button type="submit" aria-label="Add link">Add</button>
-                        <button type="button" id="cancelLinkModal" aria-label="Cancel adding link">Cancel</button>
+                        <button type="submit" aria-label="Save bookmark">Save</button>
+                        <button type="button" id="cancelLinkModal" aria-label="Cancel">Cancel</button>
                     </div>
                 </form>
             </div>
@@ -106,11 +106,11 @@
         <!-- Remove Link Modal -->
         <div class="modal" id="removeLinkModal" role="alertdialog" aria-labelledby="removeLinkModalTitle" aria-describedby="removeLinkText" aria-modal="true" aria-hidden="true">
             <div class="modal-content">
-                <h2 id="removeLinkModalTitle">Remove link</h2>
-                <p id="removeLinkText">Are you sure you want to remove this link?</p>
+                <h2 id="removeLinkModalTitle">Delete Bookmark</h2>
+                <p id="removeLinkText">This action cannot be undone.</p>
                 <div class="modal-actions">
-                    <button type="button" id="confirmRemoveLink" class="danger-btn" aria-label="Confirm delete link">Delete</button>
-                    <button type="button" id="cancelRemoveLink" aria-label="Cancel delete link">Cancel</button>
+                    <button type="button" id="confirmRemoveLink" class="danger-btn" aria-label="Confirm deletion">Delete</button>
+                    <button type="button" id="cancelRemoveLink" aria-label="Cancel">Cancel</button>
                 </div>
             </div>
         </div>
@@ -118,13 +118,13 @@
         <!-- Add Group Modal -->
         <div class="modal" id="groupModal" role="dialog" aria-labelledby="groupModalTitle" aria-modal="true" aria-hidden="true">
             <div class="modal-content">
-                <h2 id="groupModalTitle">Add a new group</h2>
+                <h2 id="groupModalTitle">New Group</h2>
                 <form id="groupForm">
-                    <label for="groupName">Group name</label>
-                    <input type="text" id="groupName" required aria-required="true" />
+                    <label for="groupName">Name</label>
+                    <input type="text" id="groupName" required aria-required="true" placeholder="Work, Personal, etc." />
                     <div class="modal-actions">
-                        <button type="submit" aria-label="Add group">Add</button>
-                        <button type="button" id="cancelGroupModal" aria-label="Cancel adding group">Cancel</button>
+                        <button type="submit" aria-label="Create group">Create</button>
+                        <button type="button" id="cancelGroupModal" aria-label="Cancel">Cancel</button>
                     </div>
                 </form>
             </div>
@@ -133,11 +133,11 @@
         <!-- Remove Group Modal -->
         <div class="modal" id="removeGroupModal" role="alertdialog" aria-labelledby="removeGroupModalTitle" aria-describedby="removeGroupText" aria-modal="true" aria-hidden="true">
             <div class="modal-content">
-                <h2 id="removeGroupModalTitle">Remove group</h2>
-                <p id="removeGroupText">Are you sure you want to remove this group?</p>
+                <h2 id="removeGroupModalTitle">Delete Group</h2>
+                <p id="removeGroupText">This will permanently delete the group and all its bookmarks.</p>
                 <div class="modal-actions">
-                    <button type="button" id="confirmRemoveGroup" class="danger-btn" aria-label="Confirm delete group">Delete</button>
-                    <button type="button" id="cancelRemoveGroup" aria-label="Cancel delete group">Cancel</button>
+                    <button type="button" id="confirmRemoveGroup" class="danger-btn" aria-label="Confirm deletion">Delete</button>
+                    <button type="button" id="cancelRemoveGroup" aria-label="Cancel">Cancel</button>
                 </div>
             </div>
         </div>

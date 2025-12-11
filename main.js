@@ -216,7 +216,7 @@ fileInput.addEventListener("change", (e) => {
 
 // === Clear Local Data ===
 clearBtn.addEventListener("click", () => {
-    const confirmClear = confirm("Clear all locally saved data?");
+    const confirmClear = confirm("Are you sure you want to reset all data? This will permanently delete all your bookmarks and settings.");
     if (!confirmClear) return;
     localStorage.removeItem(LINKS_DATA_KEY);
     data = { groups: [] };
@@ -276,10 +276,10 @@ function handleBookmarksUpload(e) {
             saveToLocal();
             saveLinksToRemote();
             renderGroups(data);
-            alert("Bookmarks imported successfully!");
+            alert("Bookmarks imported successfully.");
         } catch (err) {
             console.error("Failed to parse bookmarks:", err);
-            alert("Invalid Chrome bookmarks HTML");
+            alert("Unable to import bookmarks. Please ensure you've selected a valid browser bookmarks file.");
         }
     };
     reader.readAsText(file);
@@ -305,7 +305,7 @@ function parseBookmarksHTML(htmlString) {
 
             if (first.tagName === "H3") {
                 // Folder
-                const folderName = first.textContent.trim() || "Unnamed Folder";
+                const folderName = first.textContent.trim() || "Untitled";
                 const innerDL = node.querySelector(":scope > DL");
                 const subGroups = innerDL ? parseDL(innerDL) : [];
 
@@ -379,7 +379,7 @@ function renderGroups(data, { expandAll = false, showEmpty = false } = {}) {
 
     if (!data || !data.groups || data.groups.length === 0) {
         container.innerHTML =
-            "<p style='opacity:0.7'>No bookmarks loaded yet.</p>";
+            "<p style='opacity:0.7'>No bookmarks yet. Import your bookmarks or add a new group to get started.</p>";
         return;
     }
 
@@ -542,9 +542,9 @@ function renderGroups(data, { expandAll = false, showEmpty = false } = {}) {
         if (renderItemActions) {
             const addGroupBtn = document.createElement("button");
             addGroupBtn.classList.add("add-btn");
-            addGroupBtn.textContent = "+ Add group";
+            addGroupBtn.textContent = "+ New Group";
             addGroupBtn.style.alignSelf = "flex-start";
-            addGroupBtn.setAttribute("aria-label", "Add new bookmark group");
+            addGroupBtn.setAttribute("aria-label", "Create new bookmark group");
             addGroupBtn.addEventListener("click", () => {
                 groupModal.classList.add("show");
                 groupModal.setAttribute("aria-hidden", "false");
@@ -702,8 +702,8 @@ function openRemoveGroupModal(group, parentGroup = null) {
     modalOpen = true;
     groupToDelete = { group, parent: parentGroup };
 
-    const name = group.name || "Unnamed Group";
-    removeGroupText.textContent = `Are you sure you want to remove the group: "${name}"?`;
+    const name = group.name || "Untitled Group";
+    removeGroupText.textContent = `Delete "${name}" and all its bookmarks? This action cannot be undone.`;
     removeGroupModal.classList.add("show");
     removeGroupModal.setAttribute("aria-hidden", "false");
     document.getElementById("confirmRemoveGroup").focus();
@@ -754,7 +754,7 @@ function openRemoveLinkModal(group, linkIndex) {
     linkToDelete = { groupId: group.id, linkIndex };
 
     const linkName = group.links[linkIndex].title;
-    removeLinkText.textContent = `Remove link "${linkName}"?`;
+    removeLinkText.textContent = `Delete "${linkName}"? This action cannot be undone.`;
     removeLinkModal.classList.add("show");
     removeLinkModal.setAttribute("aria-hidden", "false");
     document.getElementById("confirmRemoveLink").focus();
@@ -897,7 +897,7 @@ function findGroupRecursively(data, groupId) {
 /* === Download JSON === */
 downloadBtn.addEventListener("click", () => {
     if (!data) {
-        alert("No data loaded yet!");
+        alert("Nothing to export. Add some bookmarks first.");
         return;
     }
 
@@ -911,7 +911,7 @@ downloadBtn.addEventListener("click", () => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "links.json";
+    a.download = "bookmarks.json";
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
