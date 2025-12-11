@@ -623,7 +623,7 @@ function handleSearch(query) {
                     links: [
                         {
                             title: `Search for: ${query.trim()}`,
-                            url: `https://duckduckgo.com/?q=${query.trim()}`,
+                            url: `https://duckduckgo.com/?q=${encodeURIComponent(query.trim())}`,
                         },
                     ],
                     groups: [],
