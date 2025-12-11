@@ -658,9 +658,13 @@ function handleSearch(query) {
 }
 
 /* --- attach input + Enter key --- */
+let searchTimeout;
 if (searchInput) {
     searchInput.addEventListener("input", () => {
-        handleSearch(searchInput.value.toLowerCase());
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            handleSearch(searchInput.value.toLowerCase());
+        }, 150);
     });
 
     // Press Enter → open first visible match
