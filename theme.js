@@ -184,7 +184,7 @@ function setAccentColorSetting(value) {
     setClockColor(value);
 }
 
-let defaultClockColor = clockElement.style.color;
+const defaultClockColor = getComputedStyle(clockElement).color;
 function setClockColor(value) {
     if (value) {
         let color = artOptions.images[currentArtIndex].color;
