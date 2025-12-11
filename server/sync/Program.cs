@@ -125,4 +125,5 @@ public class ThemeSettings {
     public bool RandomArt { get; set; }
     public string? ArtName { get; set; }
     public bool AccentColorFromArt { get; set; }
+    public string? ClockFont { get; set; }
 }

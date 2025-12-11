@@ -6,9 +6,20 @@
         <title>Links</title>
         <link rel="icon" type="image/x-icon" href="favicon.ico">
         <link rel="stylesheet" href="style.css" />
+        <!-- Clock fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Aldrich&family=Audiowide&family=Black+Ops+One&family=Chakra+Petch:wght@400;500;600&family=Electrolize&family=Major+Mono+Display&family=Michroma&family=Nova+Mono&family=Orbitron:wght@400..900&family=Oxanium:wght@400..700&family=Rajdhani:wght@400;500;600&family=Russo+One&family=Share+Tech+Mono&family=Teko:wght@400;500;600&family=VT323&display=swap" rel="stylesheet">
+        <style>
+            @font-face {
+                font-family: 'DSEG7-Classic';
+                src: url('https://unpkg.com/dseg@0.46.0/fonts/DSEG7-Classic/DSEG7Classic-Regular.woff2') format('woff2'),
+                     url('https://unpkg.com/dseg@0.46.0/fonts/DSEG7-Classic/DSEG7Classic-Regular.woff') format('woff');
+                font-weight: normal;
+                font-style: normal;
+                font-display: swap;
+            }
+        </style>
     </head>
     <body>
         <header role="banner">
@@ -34,6 +45,11 @@
                 <div class="menu-item">
                     <button id="clearBtn" class="add-btn danger-btn" aria-label="Clear all saved bookmarks">Clear All Data</button>
                 </div>
+                <div class="menu-item" role="group" aria-labelledby="clockFontLabel">
+                    <p id="clockFontLabel">Clock font</p>
+                    <select class="add-btn" id="clockFont" aria-label="Select clock font"><option value="">Select font...</option></select>
+                </div>
+
                 <div class="menu-item" role="group" aria-labelledby="imageLabel">
                     <p id="imageLabel">Image</p>
                     <select class="add-btn" id="artName" aria-label="Select background art"><option value="">Select art...</option></select>

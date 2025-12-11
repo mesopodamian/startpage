@@ -539,7 +539,7 @@ select {
     color: var(--clock-color);
     font-size: 60px;
     font-family: "Orbitron", sans-serif;
-    letter-spacing: 7px;
+    letter-spacing: 3px;
     margin-bottom: 2.5rem;
 }
 

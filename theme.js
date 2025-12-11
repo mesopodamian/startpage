@@ -4,10 +4,30 @@ const artNameSelect = document.getElementById("artName");
 const randomArtCheckbox = document.getElementById("randomArt");
 const accentColorCheckbox = document.getElementById("artAccentColor");
 const clockElement = document.getElementById("clock");
+const clockFontSelect = document.getElementById("clockFont");
 
 const THEME_SETTINGS_KEY = "themeSettings";
 
 let currentArtIndex = 0;
+
+const clockFontOptions = [
+    { name: "Orbitron", family: "'Orbitron', sans-serif" },
+    { name: "DSEG7 Classic", family: "'DSEG7-Classic', monospace" },
+    { name: "Share Tech Mono", family: "'Share Tech Mono', monospace" },
+    { name: "VT323", family: "'VT323', monospace" },
+    { name: "Oxanium", family: "'Oxanium', sans-serif" },
+    { name: "Major Mono Display", family: "'Major Mono Display', monospace" },
+    { name: "Audiowide", family: "'Audiowide', sans-serif" },
+    { name: "Rajdhani", family: "'Rajdhani', sans-serif" },
+    { name: "Teko", family: "'Teko', sans-serif" },
+    { name: "Electrolize", family: "'Electrolize', sans-serif" },
+    { name: "Michroma", family: "'Michroma', sans-serif" },
+    { name: "Nova Mono", family: "'Nova Mono', monospace" },
+    { name: "Aldrich", family: "'Aldrich', sans-serif" },
+    { name: "Russo One", family: "'Russo One', sans-serif" },
+    { name: "Chakra Petch", family: "'Chakra Petch', sans-serif" },
+    { name: "Black Ops One", family: "'Black Ops One', sans-serif" },
+];
 
 const artOptions = {
     images: [
@@ -65,11 +85,20 @@ const artOptions = {
 };
 
 window.addEventListener("DOMContentLoaded", () => {
+    // Populate art options
     artOptions.images.forEach((image) => {
         const option = document.createElement("option");
         option.value = image.name;
         option.textContent = image.name;
         artNameSelect.appendChild(option);
+    });
+
+    // Populate clock font options
+    clockFontOptions.forEach((font) => {
+        const option = document.createElement("option");
+        option.value = font.name;
+        option.textContent = font.name;
+        clockFontSelect.appendChild(option);
     });
 
     loadThemeSettingsFromLocal();
@@ -91,14 +120,20 @@ accentColorCheckbox.addEventListener("change", (e) => {
     saveThemeSettings();
 });
 
+clockFontSelect.addEventListener("change", () => {
+    setClockFont(clockFontSelect.value, true);
+});
+
 function loadThemeSettingsFromLocal() {
     const savedArtSettings = localStorage.getItem(THEME_SETTINGS_KEY);
     if (savedArtSettings) {
         let deserialized = JSON.parse(savedArtSettings);
         setArt(deserialized.artName, deserialized.randomArt, false);
         setAccentColorSetting(deserialized.accentColorFromArt);
+        setClockFont(deserialized.clockFont, false);
     } else {
         setArt(undefined, true, true);
+        setClockFont(undefined, false);
     }
 }
 
@@ -114,6 +149,7 @@ function saveThemeSettingsToLocal() {
             artName: artNameSelect.value,
             randomArt: randomArtCheckbox.checked,
             accentColorFromArt: accentColorCheckbox.checked,
+            clockFont: clockFontSelect.value,
         }),
     );
 }
@@ -130,6 +166,7 @@ function saveThemeSettingsToRemote() {
             artName: artNameSelect.value,
             randomArt: randomArtCheckbox.checked,
             accentColorFromArt: accentColorCheckbox.checked,
+            clockFont: clockFontSelect.value,
         }),
     })
         .then((response) => response.json())
@@ -144,6 +181,7 @@ function loadThemeSettingsFromRemote() {
         .then((data) => {
             setArt(data.artName, data.randomArt, false);
             setAccentColorSetting(data.accentColorFromArt);
+            setClockFont(data.clockFont, false);
             saveThemeSettingsToLocal();
         })
         .catch((error) => console.error(error));
@@ -240,3 +278,22 @@ function RGBToHex(r, g, b) {
 
     return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
 }
+
+const setClockFont = (fontName, save) => {
+    let font;
+
+    if (!fontName) {
+        // Default to first font if none specified
+        font = clockFontOptions[0];
+    } else {
+        font = clockFontOptions.find((f) => f.name === fontName);
+        if (!font) {
+            font = clockFontOptions[0];
+        }
+    }
+
+    clockFontSelect.value = font.name;
+    clockElement.style.fontFamily = font.family;
+
+    if (save) saveThemeSettings();
+};
