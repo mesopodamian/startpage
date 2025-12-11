@@ -69,14 +69,18 @@ window.addEventListener("DOMContentLoaded", () => {
 
 // === Toggle Menu ===
 menuToggle.addEventListener("click", () => {
-    sideMenu.classList.toggle("open");
+    const isOpen = sideMenu.classList.toggle("open");
     overlay.classList.toggle("show");
+    menuToggle.setAttribute("aria-expanded", isOpen);
+    sideMenu.setAttribute("aria-hidden", !isOpen);
     modalOpen = true;
 });
 
 overlay.addEventListener("click", () => {
     sideMenu.classList.remove("open");
     overlay.classList.remove("show");
+    menuToggle.setAttribute("aria-expanded", "false");
+    sideMenu.setAttribute("aria-hidden", "true");
     modalOpen = false;
 });
 
@@ -99,6 +103,34 @@ document.addEventListener("keydown", (e) => {
 });
 
 document.addEventListener("keydown", (e) => {
+    // Close modals with Escape key
+    if (e.key === "Escape" && modalOpen) {
+        if (sideMenu.classList.contains("open")) {
+            sideMenu.classList.remove("open");
+            overlay.classList.remove("show");
+            menuToggle.setAttribute("aria-expanded", "false");
+            sideMenu.setAttribute("aria-hidden", "true");
+            modalOpen = false;
+            return;
+        }
+        if (linkModal.classList.contains("show")) {
+            closeLinkModal();
+            return;
+        }
+        if (removeLinkModal.classList.contains("show")) {
+            closeRemoveLinkModal();
+            return;
+        }
+        if (groupModal.classList.contains("show")) {
+            closeGroupModal();
+            return;
+        }
+        if (removeGroupModal.classList.contains("show")) {
+            closeRemoveGroupModal();
+            return;
+        }
+    }
+
     if (modalOpen) return;
 
     if (!searchInput.value || searchInput.value === BOOKMARKS_SEARCH_CHAR) {
@@ -390,6 +422,8 @@ function renderGroups(data, { expandAll = false, showEmpty = false } = {}) {
             const section = document.createElement("section");
             section.classList.add("group");
             section.style.display = visible ? "" : "none";
+            section.setAttribute("role", "region");
+            section.setAttribute("aria-label", `Bookmark group: ${group.name}`);
 
             // HEADER
             const header = document.createElement("div");
@@ -400,6 +434,7 @@ function renderGroups(data, { expandAll = false, showEmpty = false } = {}) {
 
             const toggle = document.createElement("span");
             toggle.classList.add("toggle-icon");
+            toggle.setAttribute("aria-hidden", "true");
 
             const hasChildren = group.groups && group.groups.length > 0;
 
@@ -407,6 +442,10 @@ function renderGroups(data, { expandAll = false, showEmpty = false } = {}) {
                 const open = openSet.has(group);
                 toggle.textContent = open ? "▼" : "▶";
                 toggle.style.opacity = "0.3";
+                header.setAttribute("role", "button");
+                header.setAttribute("tabindex", "0");
+                header.setAttribute("aria-expanded", open);
+                header.setAttribute("aria-label", `${group.name}, ${open ? "collapse" : "expand"} group`);
                 header.addEventListener("click", () => {
                     if (openSet.has(group)) {
                         // close group and all descendants
@@ -420,6 +459,12 @@ function renderGroups(data, { expandAll = false, showEmpty = false } = {}) {
                     }
                     buildUI();
                 });
+                header.addEventListener("keydown", (e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        header.click();
+                    }
+                });
             } else {
                 toggle.textContent = "•";
                 toggle.style.opacity = "0.3";
@@ -431,9 +476,11 @@ function renderGroups(data, { expandAll = false, showEmpty = false } = {}) {
                 deleteBtn.classList.add("remove-btn", "remove-x");
                 deleteBtn.textContent = "×";
                 deleteBtn.title = "Remove group";
-                deleteBtn.addEventListener("click", () =>
-                    openRemoveGroupModal(group, group._parent),
-                );
+                deleteBtn.setAttribute("aria-label", `Remove group: ${group.name}`);
+                deleteBtn.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    openRemoveGroupModal(group, group._parent);
+                });
             }
 
             header.appendChild(h2);
@@ -441,7 +488,11 @@ function renderGroups(data, { expandAll = false, showEmpty = false } = {}) {
                 const addBtn = document.createElement("button");
                 addBtn.classList.add("remove-btn", "remove-x");
                 addBtn.textContent = "+";
-                addBtn.addEventListener("click", () => openLinkModal(group));
+                addBtn.setAttribute("aria-label", `Add link to group: ${group.name}`);
+                addBtn.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    openLinkModal(group);
+                });
                 header.appendChild(addBtn);
             }
             if (deleteBtn) {
@@ -454,13 +505,18 @@ function renderGroups(data, { expandAll = false, showEmpty = false } = {}) {
             if (group.links && group.links.length > 0) {
                 const ul = document.createElement("ul");
                 ul.classList.add("link-list");
+                ul.setAttribute("role", "list");
+                ul.setAttribute("aria-label", `Links in ${group.name}`);
                 group.links.forEach((link, lIndex) => {
                     const li = document.createElement("li");
                     li.classList.add("link-item");
+                    li.setAttribute("role", "listitem");
                     const a = document.createElement("a");
                     a.href = link.url;
                     a.target = "_blank";
                     a.textContent = link.title;
+                    a.setAttribute("aria-label", `${link.title} (opens in new tab)`);
+                    a.setAttribute("rel", "noopener noreferrer");
 
                     let linkRemoveBtn = undefined;
                     if (renderItemActions) {
@@ -468,6 +524,7 @@ function renderGroups(data, { expandAll = false, showEmpty = false } = {}) {
                         linkRemoveBtn.classList.add("link-remove-btn");
                         linkRemoveBtn.textContent = "×";
                         linkRemoveBtn.title = "Remove link";
+                        linkRemoveBtn.setAttribute("aria-label", `Remove link: ${link.title}`);
                         linkRemoveBtn.addEventListener("click", () =>
                             openRemoveLinkModal(group, lIndex),
                         );
@@ -488,8 +545,10 @@ function renderGroups(data, { expandAll = false, showEmpty = false } = {}) {
             addGroupBtn.classList.add("add-btn");
             addGroupBtn.textContent = "+ Add group";
             addGroupBtn.style.alignSelf = "flex-start";
+            addGroupBtn.setAttribute("aria-label", "Add new bookmark group");
             addGroupBtn.addEventListener("click", () => {
                 groupModal.classList.add("show");
+                groupModal.setAttribute("aria-hidden", "false");
                 groupForm.reset();
                 document.getElementById("groupName").focus();
             });
@@ -647,10 +706,13 @@ function openRemoveGroupModal(group, parentGroup = null) {
     const name = group.name || "Unnamed Group";
     removeGroupText.textContent = `Are you sure you want to remove the group: "${name}"?`;
     removeGroupModal.classList.add("show");
+    removeGroupModal.setAttribute("aria-hidden", "false");
+    document.getElementById("confirmRemoveGroup").focus();
 }
 
 function closeRemoveGroupModal() {
     removeGroupModal.classList.remove("show");
+    removeGroupModal.setAttribute("aria-hidden", "true");
     groupToDelete = null;
     modalOpen = false;
 }
@@ -695,10 +757,13 @@ function openRemoveLinkModal(group, linkIndex) {
     const linkName = group.links[linkIndex].title;
     removeLinkText.textContent = `Remove link "${linkName}"?`;
     removeLinkModal.classList.add("show");
+    removeLinkModal.setAttribute("aria-hidden", "false");
+    document.getElementById("confirmRemoveLink").focus();
 }
 
 function closeRemoveLinkModal() {
     removeLinkModal.classList.remove("show");
+    removeLinkModal.setAttribute("aria-hidden", "true");
     linkToDelete = { groupId: null, linkIndex: null };
     modalOpen = false;
 }
@@ -728,11 +793,14 @@ function openLinkModal(group) {
     modalOpen = true;
     currentGroup = group;
     linkModal.classList.add("show");
+    linkModal.setAttribute("aria-hidden", "false");
     linkForm.reset();
+    document.getElementById("linkTitle").focus();
 }
 
 function closeLinkModal() {
     linkModal.classList.remove("show");
+    linkModal.setAttribute("aria-hidden", "true");
     modalOpen = false;
 }
 
@@ -768,6 +836,7 @@ cancelGroupModal.addEventListener("click", closeGroupModal);
 
 function closeGroupModal() {
     groupModal.classList.remove("show");
+    groupModal.setAttribute("aria-hidden", "true");
     modalOpen = false;
 }
 

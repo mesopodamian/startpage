@@ -11,117 +11,117 @@
         <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap" rel="stylesheet">
     </head>
     <body>
-        <header>
+        <header role="banner">
             <h1></h1>
-            <button id="menuToggle" class="menu-btn" title="Menu">☰</button>
+            <button id="menuToggle" class="menu-btn" title="Menu" aria-label="Open menu" aria-expanded="false" aria-controls="sideMenu">☰</button>
         </header>
 
         <!-- Slide‑out side menu -->
-        <aside class="side-menu" id="sideMenu">
+        <aside class="side-menu" id="sideMenu" role="navigation" aria-label="Settings menu" aria-hidden="true">
             <div class="menu-content">
-                <div class="menu-item">
-                    <p>Data</p>
-                    <button id="downloadBtn" class="add-btn">Download JSON</button>
+                <div class="menu-item" role="group" aria-labelledby="dataLabel">
+                    <p id="dataLabel">Data</p>
+                    <button id="downloadBtn" class="add-btn" aria-label="Download bookmarks as JSON file">Download JSON</button>
                 </div>
                 <div class="menu-item">
-                    <button id="loadBtn" class="add-btn">Load JSON</button>
-                    <input type="file" id="fileInput" accept=".json" hidden />
+                    <button id="loadBtn" class="add-btn" aria-label="Load bookmarks from JSON file">Load JSON</button>
+                    <input type="file" id="fileInput" accept=".json" hidden aria-label="Select JSON file to import" />
                 </div>
                 <div class="menu-item">
-                    <button id="loadBookmarksBtn" class="add-btn">Load HTML</button>
-                    <input type="file" id="bookmarksFile" accept=".html" hidden />
+                    <button id="loadBookmarksBtn" class="add-btn" aria-label="Load bookmarks from Chrome HTML export">Load HTML</button>
+                    <input type="file" id="bookmarksFile" accept=".html" hidden aria-label="Select HTML bookmarks file to import" />
                 </div>
                 <div class="menu-item">
-                    <button id="clearBtn" class="add-btn danger-btn">Clear All Data</button>
+                    <button id="clearBtn" class="add-btn danger-btn" aria-label="Clear all saved bookmarks">Clear All Data</button>
                 </div>
-                <div class="menu-item">
-                    <p>Image</p>
-                    <select class="add-btn" id="artName"><option value="">Select art...</option></select>
-                    <input type="checkbox" id="randomArt" checked> random art</input>
+                <div class="menu-item" role="group" aria-labelledby="imageLabel">
+                    <p id="imageLabel">Image</p>
+                    <select class="add-btn" id="artName" aria-label="Select background art"><option value="">Select art...</option></select>
+                    <label><input type="checkbox" id="randomArt" checked aria-label="Enable random art selection"> random art</label>
                     <br>
-                    <input type="checkbox" id="artAccentColor"> accent color from art</input>
+                    <label><input type="checkbox" id="artAccentColor" aria-label="Use accent color from art"> accent color from art</label>
                 </div>
 
-                <div class="menu-item">
-                    <p>Remote sync server address</p>
-                    <input type="text" id="remoteServerAddress"></input>
-                    <button type="button" id="remoteServerAddressSave" class="add-btn">Save</button>
+                <div class="menu-item" role="group" aria-labelledby="syncLabel">
+                    <p id="syncLabel">Remote sync server address</p>
+                    <input type="text" id="remoteServerAddress" aria-label="Remote sync server URL" placeholder="https://example.com/api">
+                    <button type="button" id="remoteServerAddressSave" class="add-btn" aria-label="Save remote server address">Save</button>
                 </div>
             </div>
         </aside>
 
         <!-- Overlay for when menu is open -->
-        <div class="overlay" id="overlay"></div>
+        <div class="overlay" id="overlay" aria-hidden="true"></div>
 
         <div id="topcontainer" class="top-container top-container-hidden-items">
             <div class="hero" id="hero">
-                <div id="clock" class="clock"></div>
-                <section class="search-bar" id="searchbar">
-                    <input type="text" id="searchInput" placeholder="Search..." autocomplete="off" />
+                <div id="clock" class="clock" role="timer" aria-label="Current time" aria-live="polite"></div>
+                <section class="search-bar" id="searchbar" role="search">
+                    <input type="text" id="searchInput" placeholder="Search..." autocomplete="off" aria-label="Search bookmarks or the web" />
                 </section>
-                <div class="art" id="art"></div>
-                <pre class="help" id="help"></pre>
+                <div class="art" id="art" role="img" aria-label="Decorative artwork"></div>
+                <pre class="help" id="help" aria-label="Keyboard shortcuts help"></pre>
             </div>
 
             <div class="section">
-                <main class="container">
+                <main class="container" role="main" aria-label="Bookmarks">
                     <p>There is nothing to show here...</p>
                 </main>
             </div>
         </div>
 
         <!-- Add Link Modal -->
-        <div class="modal" id="linkModal">
+        <div class="modal" id="linkModal" role="dialog" aria-labelledby="linkModalTitle" aria-modal="true" aria-hidden="true">
             <div class="modal-content">
-                <h2>Add a new link</h2>
+                <h2 id="linkModalTitle">Add a new link</h2>
                 <form id="linkForm">
-                    <label>Title</label>
-                    <input type="text" id="linkTitle" required />
-                    <label>URL</label>
-                    <input type="url" id="linkUrl" required />
+                    <label for="linkTitle">Title</label>
+                    <input type="text" id="linkTitle" required aria-required="true" />
+                    <label for="linkUrl">URL</label>
+                    <input type="url" id="linkUrl" required aria-required="true" />
                     <div class="modal-actions">
-                        <button type="submit">Add</button>
-                        <button type="button" id="cancelLinkModal">Cancel</button>
+                        <button type="submit" aria-label="Add link">Add</button>
+                        <button type="button" id="cancelLinkModal" aria-label="Cancel adding link">Cancel</button>
                     </div>
                 </form>
             </div>
         </div>
 
         <!-- Remove Link Modal -->
-        <div class="modal" id="removeLinkModal">
+        <div class="modal" id="removeLinkModal" role="alertdialog" aria-labelledby="removeLinkModalTitle" aria-describedby="removeLinkText" aria-modal="true" aria-hidden="true">
             <div class="modal-content">
-                <h2>Remove link</h2>
+                <h2 id="removeLinkModalTitle">Remove link</h2>
                 <p id="removeLinkText">Are you sure you want to remove this link?</p>
                 <div class="modal-actions">
-                    <button type="button" id="confirmRemoveLink" class="danger-btn">Delete</button>
-                    <button type="button" id="cancelRemoveLink">Cancel</button>
+                    <button type="button" id="confirmRemoveLink" class="danger-btn" aria-label="Confirm delete link">Delete</button>
+                    <button type="button" id="cancelRemoveLink" aria-label="Cancel delete link">Cancel</button>
                 </div>
             </div>
         </div>
 
         <!-- Add Group Modal -->
-        <div class="modal" id="groupModal">
+        <div class="modal" id="groupModal" role="dialog" aria-labelledby="groupModalTitle" aria-modal="true" aria-hidden="true">
             <div class="modal-content">
-                <h2>Add a new group</h2>
+                <h2 id="groupModalTitle">Add a new group</h2>
                 <form id="groupForm">
-                    <label>Group name</label>
-                    <input type="text" id="groupName" required />
+                    <label for="groupName">Group name</label>
+                    <input type="text" id="groupName" required aria-required="true" />
                     <div class="modal-actions">
-                        <button type="submit">Add</button>
-                        <button type="button" id="cancelGroupModal">Cancel</button>
+                        <button type="submit" aria-label="Add group">Add</button>
+                        <button type="button" id="cancelGroupModal" aria-label="Cancel adding group">Cancel</button>
                     </div>
                 </form>
             </div>
         </div>
 
         <!-- Remove Group Modal -->
-        <div class="modal" id="removeGroupModal">
+        <div class="modal" id="removeGroupModal" role="alertdialog" aria-labelledby="removeGroupModalTitle" aria-describedby="removeGroupText" aria-modal="true" aria-hidden="true">
             <div class="modal-content">
-                <h2>Remove group</h2>
+                <h2 id="removeGroupModalTitle">Remove group</h2>
                 <p id="removeGroupText">Are you sure you want to remove this group?</p>
                 <div class="modal-actions">
-                    <button type="button" id="confirmRemoveGroup" class="danger-btn">Delete</button>
-                    <button type="button" id="cancelRemoveGroup">Cancel</button>
+                    <button type="button" id="confirmRemoveGroup" class="danger-btn" aria-label="Confirm delete group">Delete</button>
+                    <button type="button" id="cancelRemoveGroup" aria-label="Cancel delete group">Cancel</button>
                 </div>
             </div>
         </div>
