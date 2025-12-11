@@ -84,24 +84,7 @@ overlay.addEventListener("click", () => {
     modalOpen = false;
 });
 
-// Move highlighted link with arrow keys
-document.addEventListener("keydown", (e) => {
-    if (e.key === "ArrowUp") {
-        navigateLinks(-1);
-        e.preventDefault();
-    }
-    if (e.key === "ArrowDown") {
-        if (!searchInput.value) {
-            searchInput.value = BOOKMARKS_SEARCH_CHAR;
-            handleSearch(searchInput.value);
-            return;
-        }
-
-        navigateLinks(1);
-        e.preventDefault();
-    }
-});
-
+// Keyboard navigation handler
 document.addEventListener("keydown", (e) => {
     // Close modals with Escape key
     if (e.key === "Escape" && modalOpen) {
@@ -133,8 +116,25 @@ document.addEventListener("keydown", (e) => {
 
     if (modalOpen) return;
 
+    // Arrow key navigation for links
+    if (e.key === "ArrowUp") {
+        navigateLinks(-1);
+        e.preventDefault();
+        return;
+    }
+    if (e.key === "ArrowDown") {
+        if (!searchInput.value) {
+            searchInput.value = BOOKMARKS_SEARCH_CHAR;
+            handleSearch(searchInput.value);
+            return;
+        }
+        navigateLinks(1);
+        e.preventDefault();
+        return;
+    }
+
+    // Auto-focus search input
     if (!searchInput.value || searchInput.value === BOOKMARKS_SEARCH_CHAR) {
-        if (e.key === "ArrowUp" || e.key === "ArrowDown") return;
         searchInput.focus();
         searchInput.select();
     }
