@@ -13,8 +13,14 @@ async function syncFetch(endpoint, options = {}) {
         return { ok: false, data: null, error: "No server configured" };
     }
 
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 500);
+
     try {
-        const response = await fetch(`${remoteBaseUrl}${endpoint}`, options);
+        const response = await fetch(`${remoteBaseUrl}${endpoint}`, {
+            ...options,
+            signal: controller.signal,
+        });
 
         if (!response.ok) {
             return {
@@ -28,11 +34,16 @@ async function syncFetch(endpoint, options = {}) {
         return { ok: true, data, error: null };
     } catch (error) {
         console.error("Sync error:", error);
+        if (error.name === "AbortError") {
+            return { ok: false, data: null, error: "Request timed out" };
+        }
         return {
             ok: false,
             data: null,
             error: error.message || "Connection failed",
         };
+    } finally {
+        clearTimeout(timeoutId);
     }
 }
 
