@@ -154,8 +154,6 @@ function saveThemeSettingsToLocal() {
     );
 }
 
-
-
 const setArt = (artName, random, save) => {
     const img = document.createElement("img");
 

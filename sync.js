@@ -47,43 +47,6 @@ async function syncFetch(endpoint, options = {}) {
     }
 }
 
-// === Links Sync Functions ===
-function loadLinksFromRemote() {
-    if (!remoteBaseUrl) return;
-
-    syncFetch("/links").then((result) => {
-        if (result.ok) {
-            data = result.data;
-            currentData = JSON.parse(JSON.stringify(result.data));
-            saveToLocal();
-            renderGroups(data);
-            if (SHOW_SUCCESS_TOASTS) {
-                showToast("Bookmarks synced", "success");
-            }
-        } else {
-            showToast("Failed to load bookmarks", "error");
-        }
-    });
-}
-
-function saveLinksToRemote() {
-    if (!remoteBaseUrl) return;
-
-    const cleanData = stripHelpers(data);
-
-    syncFetch("/links", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(cleanData),
-    }).then((result) => {
-        if (!result.ok) {
-            showToast("Failed to save bookmarks", "error");
-        }
-    });
-}
-
 // === Theme Sync Functions ===
 function loadThemeSettingsFromRemote() {
     if (!remoteBaseUrl) return;
@@ -93,7 +56,6 @@ function loadThemeSettingsFromRemote() {
             setArt(result.data.artName, result.data.randomArt, false);
             setAccentColorSetting(result.data.accentColorFromArt);
             setClockFont(result.data.clockFont, false);
-            saveThemeSettingsToLocal();
             if (SHOW_SUCCESS_TOASTS) {
                 showToast("Theme synced", "success");
             }

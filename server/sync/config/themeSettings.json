@@ -1,5 +1,6 @@
 {
-  "RandomArt": true,
-  "ArtName": "purple-computers",
-  "AccentColorFromArt": true
+  "RandomArt": false,
+  "ArtName": "astronaut",
+  "AccentColorFromArt": true,
+  "ClockFont": "Orbitron"
 }

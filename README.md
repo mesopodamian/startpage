@@ -1,15 +1,12 @@
 # Links
 
-A minimal, self-hosted start page for managing bookmarks with a customizable clock and artwork display.
+A minimal, self-hosted start page with a customizable clock and artwork display.
 
 ## Features
 
-- **Bookmark Management** - Organize links into nested groups with drag-free simplicity
-- **Quick Search** - Instantly filter bookmarks or search the web via DuckDuckGo
-- **Keyboard Navigation** - Navigate and open links without touching the mouse
+- **Quick Search** - Instantly search the web via DuckDuckGo
 - **Customizable Clock** - Choose from 16 digital/cyberpunk-style fonts
 - **Dynamic Artwork** - Display curated wallpapers with optional accent color matching
-- **Import/Export** - Support for JSON and browser bookmark HTML files
 - **Remote Sync** - Optional sync server for multi-device access
 
 ## Quick Start
@@ -27,23 +24,13 @@ Then visit `http://localhost:8000`
 ### With Sync Server
 
 1. Start the sync server:
+
 ```bash
 cd server/sync
 dotnet run
 ```
 
 2. Open the frontend and configure the sync server address in the settings menu.
-
-## Keyboard Shortcuts
-
-| Key | Action |
-|-----|--------|
-| `.` | Browse all bookmarks |
-| `Space` | Search the web |
-| `Arrow Up/Down` | Navigate through links |
-| `Enter` | Open selected link |
-| `Ctrl + Enter` | Open in new tab |
-| `Escape` | Close modals/menus |
 
 ## Docker
 
