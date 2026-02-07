@@ -1,4 +1,4 @@
-# Links
+# Startpage
 
 A minimal, self-hosted start page with a customizable clock and artwork display.
 
@@ -37,16 +37,16 @@ dotnet run
 ### Frontend
 
 ```bash
-docker build -t links .
-docker run -p 8080:80 links
+docker build -t startpage .
+docker run -p 8080:80 startpage
 ```
 
 ### Sync Server
 
 ```bash
 cd server/sync
-docker build -t links-sync .
-docker run -p 5000:8080 links-sync
+docker build -t startpage-sync .
+docker run -p 5000:8080 startpage-sync
 ```
 
 ## Tech Stack

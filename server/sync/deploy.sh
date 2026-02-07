@@ -1,6 +1,6 @@
 #!/bin/bash
 # ==========================================
-# Links Sync App
+# Startpage Sync App
 # Remote Build & Deploy
 # Copies files, builds Docker image remotely,
 # and runs the container on the remote host.
@@ -9,12 +9,12 @@
 set -e  # Exit on error
 
 # ---[ CONFIGURATION ]---
-IMAGE_NAME="links-sync"
-CONTAINER_NAME="links-sync"
+IMAGE_NAME="startpage-sync"
+CONTAINER_NAME="startpage-sync"
 REMOTE_USER="ubuntu"
 REMOTE_HOST="192.168.1.24"
 SSH_PORT="22"
-REMOTE_PATH="/home/${REMOTE_USER}/apps/links-sync"
+REMOTE_PATH="/home/${REMOTE_USER}/apps/startpage-sync"
 LOCAL_PORT="8080"
 REMOTE_WEB_PORT="7402"
 
