@@ -571,6 +571,7 @@ select {
     justify-content: center;
     max-height: 200px;
     margin-bottom: 4rem;
+    min-width: 100%;
 }
 
 .art img {
