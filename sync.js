@@ -53,9 +53,23 @@ function loadThemeSettingsFromRemote() {
 
     syncFetch("/theme").then((result) => {
         if (result.ok) {
-            setArt(result.data.artName, result.data.randomArt, false);
-            setAccentColorSetting(result.data.accentColorFromArt);
-            setClockFont(result.data.clockFont, false);
+            const remoteSettings = JSON.stringify({
+                artName: result.data.artName,
+                randomArt: result.data.randomArt,
+                accentColorFromArt: result.data.accentColorFromArt,
+                clockFont: result.data.clockFont,
+            });
+
+            // Skip re-applying when the server state matches the local cache
+            // (avoids a visible flip, e.g. artwork re-randomizing)
+            if (remoteSettings !== localStorage.getItem(THEME_SETTINGS_KEY)) {
+                setArt(result.data.artName, result.data.randomArt, false);
+                setAccentColorSetting(result.data.accentColorFromArt);
+                setClockFont(result.data.clockFont, false);
+                // Cache server state so the next refresh shows it immediately
+                localStorage.setItem(THEME_SETTINGS_KEY, remoteSettings);
+            }
+
             if (SHOW_SUCCESS_TOASTS) {
                 showToast("Theme synced", "success");
             }
