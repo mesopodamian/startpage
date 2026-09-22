@@ -4,7 +4,6 @@ A minimal, self-hosted start page with a customizable clock and artwork display.
 
 ## Features
 
-- **Quick Search** - Instantly search the web via DuckDuckGo
 - **Customizable Clock** - Choose from 16 digital/cyberpunk-style fonts
 - **Dynamic Artwork** - Display curated wallpapers with optional accent color matching
 - **Remote Sync** - Optional sync server for multi-device access

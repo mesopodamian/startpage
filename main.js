@@ -12,7 +12,6 @@ const remoteServerAddressSaveButton = document.getElementById(
 // hero and clock elements
 const hero = document.getElementById("hero");
 const clock = document.getElementById("clock");
-const searchInput = document.getElementById("searchInput");
 const help = document.getElementById("help");
 const topContainer = document.getElementById("topcontainer");
 
@@ -49,12 +48,6 @@ document.addEventListener("keydown", (e) => {
             return;
         }
     }
-
-    // Auto-focus search input
-    if (!searchInput.value) {
-        searchInput.focus();
-        searchInput.select();
-    }
 });
 
 remoteServerAddressSaveButton.addEventListener("click", () => {
@@ -64,29 +57,6 @@ remoteServerAddressSaveButton.addEventListener("click", () => {
 
 /* === Load from localStorage === */
 loadRemoteServerAddressFromLocal();
-
-/* --- Search handler --- */
-/* --- attach input + Enter key --- */
-if (searchInput) {
-    // Press Enter → open first visible match
-    searchInput.addEventListener("keydown", (e) => {
-        if (e.key === "Enter") {
-            const q = searchInput.value.trim().toLowerCase();
-            if (!q) return;
-
-            const target = isCtrlPressed(e) ? "_blank" : "_self";
-            window.open(
-                `https://duckduckgo.com/?q=${encodeURIComponent(q.trim())}`,
-                target,
-            );
-            e.preventDefault();
-        }
-    });
-}
-
-function isCtrlPressed(event) {
-    return event.ctrlKey;
-}
 
 function showTime() {
     const date = new Date();
